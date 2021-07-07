@@ -1,4 +1,10 @@
-[TOC]
+- [week02](#week02)
+  * [homework](#homework)
+  * [哈希表-集合-映射](#哈希表-集合-映射)
+  * [LRU](#lru)
+  * [递归](#递归)
+  * [树](#树)
+  * [分治](#分治)
 
 # week02
 
@@ -288,7 +294,7 @@ func mergeKLists(lists []*ListNode) *ListNode {
 // @lc code=end
 ```
 
-## 哈希表、集合、映射
+## 哈希表-集合-映射
 
 - [两数之和](https://leetcode-cn.com/problems/two-sum/description/)
 
