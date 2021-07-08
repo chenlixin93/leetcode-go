@@ -9,19 +9,107 @@
 
 ## homework
 
-- [从中序与后序遍历序列构造二叉树（Medium）]()
+- [从中序与后序遍历序列构造二叉树（Medium）](https://leetcode-cn.com/problems/construct-binary-tree-from-inorder-and-postorder-traversal/)
 
 ```go
 ```
 
-- [课程表 II （Medium）]()
+- [课程表 II （Medium）](https://leetcode-cn.com/problems/course-schedule-ii/)
 
 ```go
+func findOrder(numCourses int, prerequisites [][]int) []int {
+	n := numCourses
+	edges := make([][]int, n) // [[],[]]
+	inDeg := make([]int, n) // [0,0]
+
+	var addEdge func(x,y int)
+	addEdge = func(x,y int) {
+		edges[x] = append(edges[x], y)
+		inDeg[y]++
+	}
+	// 建图，加边
+	for _, pre := range prerequisites {
+		ai := pre[0]
+		bi := pre[1] // 先修课程
+		addEdge(bi, ai) // 即ai的入度数+1
+	}
+
+	var topsort func(q []int) []int
+	topsort = func(q []int) []int {
+		res := []int{} // 存储已学习的课程
+		m := 0
+		for len(q) != 0 {
+			x := q[0] // 取出可学习的课程
+			q = q[1:] // 注意不能用 :=
+			for _, y := range edges[x] {
+				inDeg[y]-- // y课程入度数-1
+				if inDeg[y] == 0 {
+					q = append(q, y)
+				}
+			}
+			res = append(res, x)
+			m++
+		}
+		if m == n { return res } // 可以完成所有课程，返回学习顺序
+		return []int{} // 返回空数组
+	}
+
+	q := []int{} // 存放入度数为0的课程编号，即可学习课程
+	for i := 0; i < n; i++ {
+		if inDeg[i] == 0 { 
+			q = append(q, i)
+		}
+	}
+	return topsort(q)
+}
 ```
 
-- [被围绕的区域（Medium）]()
+- [被围绕的区域（Medium）](https://leetcode-cn.com/problems/surrounded-regions/)
 
 ```go
+func solve(board [][]byte)  {
+	/*
+	* 解题思路
+	* 假设有一场洪水，初始时从边界上的 O 开始所搜，相邻为 O 的，设为洪水不可到达 U
+	* 最终遍历整个区域，遇到仍然为 O 的，将其淹没为 X；遇到 U 的，将其恢复为 O
+	*/
+	m := len(board)
+	n := len(board[0])
+
+	if m == 0 || n == 0 { return }
+
+	var dfs = func(x,y int) {}
+	dfs = func(x,y int) {
+		if x < 0 || x >= m || y < 0 || y >= n || board[x][y] == 'U' || board[x][y] == 'X' { return }
+		board[x][y] = 'U' // 设为不可达
+		
+		// 四个方向
+		// {1, -1, 0, 0}
+		// {0, 0, 1, -1}
+		dfs(x + 1, y)
+		dfs(x - 1, y)
+		dfs(x, y + 1)
+		dfs(x, y - 1)
+	}
+
+	// 处理第一行和最后一行
+	for i := 0; i < n; i++ {
+		if board[0][i] == 'O' { dfs(0, i) }
+		if board[m - 1][i] == 'O' { dfs(m - 1, i) }
+	}
+	// 处理第一列和最后一列
+	for j := 0; j < m; j++ {
+		if board[j][0] == 'O' { dfs(j, 0) }
+		if board[j][n - 1] == 'O' { dfs(j, n - 1) }
+	}
+
+	for i := 0; i < m; i++ {
+		for j := 0; j < n; j++ {
+			if board[i][j] == 'O' { board[i][j] = 'X'}
+			if board[i][j] == 'U' { board[i][j] = 'O'}
+		}
+	}
+}
 ```
 
 ## 树-二叉树-树的遍历
@@ -259,6 +347,49 @@ func findRedundantConnection(input [][]int) (ans []int) {
 - [课程表（Medium）](https://leetcode-cn.com/problems/course-schedule/)
 
 ```go
+func canFinish(numCourses int, prerequisites [][]int) bool {
+	n := numCourses
+	edges := make([][]int, n) // [[],[]]
+	inDeg := make([]int, n) // [0,0]
+
+	var addEdge func(x,y int)
+	addEdge = func(x,y int) {
+		edges[x] = append(edges[x], y)
+		inDeg[y]++
+	}
+	// 建图，加边
+	for _, pre := range prerequisites {
+		ai := pre[0]
+		bi := pre[1] // 先修课程
+		addEdge(bi, ai) // 即ai的入度数+1
+	}
+
+	var topsort func(q []int) bool
+	topsort = func(q []int) bool {
+		m := 0 // 统计已学习课程数 
+		for len(q) != 0 {
+			x := q[0] // 取出可学习的课程
+			m++
+			q = q[1:] // 注意不能用 :=
+			for _, y := range edges[x] {
+				inDeg[y]-- // y课程入度数-1
+				if inDeg[y] == 0 {
+					q = append(q, y)
+				}
+			}
+			
+		}
+		return m == n
+	}
+
+	q := []int{} // 存放入度数为0的课程编号，即可学习课程
+	for i := 0; i < n; i++ {
+		if inDeg[i] == 0 { 
+			q = append(q, i)
+		}
+	}
+	return topsort(q)
+}
 ```
 
 ## DFS-BFS
@@ -352,9 +483,48 @@ func solveNQueens(n int) (res [][]string) {
 }
 ```
 
-- [岛屿数量（Medium）]()
+- [岛屿数量（Medium）](https://leetcode-cn.com/problems/number-of-islands/)
 
 ```go
+func numIslands(grid [][]byte) (ans int) {
+	// DFS做法
+	m := len(grid)
+	n := len(grid[0])
+
+	visited := map[int][]bool{}
+	for i := 0; i < m; i++ {
+		visited[i] = make([]bool, n)
+	}
+
+	// 上-下-左-右四个方向
+	dx := []int{-1, 0, 0, 1}
+	dy := []int{0, -1, 1, 0}
+
+	var dfs func(grid [][]byte, x,y int)
+	dfs = func(grid [][]byte, x,y int) {
+		visited[x][y] = true
+		for i := 0; i < 4; i++ {
+			nx := x + dx[i]
+			ny := y + dy[i]
+
+			// 检查边界
+			if nx < 0 || ny < 0 || nx >= m || ny >= n { continue }
+			if grid[nx][ny] == '1' && !visited[nx][ny] {
+				dfs(grid, nx, ny)
+			}
+		}
+	}
+
+	for i := 0; i < m; i++ {
+		for j := 0; j < n; j++ {
+			if grid[i][j] == '1' && !visited[i][j] {
+				dfs(grid, i, j)
+				ans++
+			}
+		}
+	}
+	return
+}
 ```
 
 - [最小基因变化（Medium）]()
