@@ -593,7 +593,7 @@ func minMutation(start string, end string, bank []string) int {
 			for j := 0; j < len(curr); j++ {
 				for _, s := range mutationMap[curr[j]] {
 					if idx := idxOf(curr[:j] + s + curr[j+1:], bank); // curr[:j] 前闭后开
-                        idx != -1 && !isUsed[idx] { 、、
+                        idx != -1 && !isUsed[idx] {
 						queue = append(queue, bank[idx])
 						isUsed[idx] = true
 					}
