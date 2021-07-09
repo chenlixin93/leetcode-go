@@ -12,11 +12,36 @@
 - [从中序与后序遍历序列构造二叉树（Medium）](https://leetcode-cn.com/problems/construct-binary-tree-from-inorder-and-postorder-traversal/)
 
 ```go
+// 递归
+func buildTree(inorder []int, postorder []int) *TreeNode {
+	idxMap := map[int]int{}
+	for i, v := range inorder {
+		idxMap[v] = i
+	}
+
+	var build func(int, int) *TreeNode
+	build = func(inorderLeft, inorderRight int) *TreeNode {
+		if inorderLeft > inorderRight {
+			return nil // 左右索引相交了
+		}
+
+		val := postorder[len(postorder) - 1] // 后序遍历的末位元素是当前子树的根节点
+		postorder = postorder[:len(postorder) - 1]
+		root := &TreeNode{Val: val}
+
+		inorderRootIndex := idxMap[val]
+		root.Right = build(inorderRootIndex + 1, inorderRight)
+		root.Left = build(inorderLeft, inorderRootIndex - 1)
+		return root
+	}
+	return build(0, len(inorder) - 1) // 考虑子问题怎么处理即可
+}
 ```
 
 - [课程表 II （Medium）](https://leetcode-cn.com/problems/course-schedule-ii/)
 
 ```go
+// BFS拓扑排序模板
 func findOrder(numCourses int, prerequisites [][]int) []int {
 	n := numCourses
 	edges := make([][]int, n) // [[],[]]
@@ -67,6 +92,7 @@ func findOrder(numCourses int, prerequisites [][]int) []int {
 - [被围绕的区域（Medium）](https://leetcode-cn.com/problems/surrounded-regions/)
 
 ```go
+// DFS
 func solve(board [][]byte)  {
 	/*
 	* 解题思路
@@ -201,6 +227,7 @@ func levelOrder(root *Node) (res [][]int) {
 - [从前序与中序遍历序列构造二叉树（Medium）](https://leetcode-cn.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal/)
 
 ```go
+// 递归
 /**
  * Definition for a binary tree node.
  * type TreeNode struct {
@@ -291,6 +318,7 @@ func buildTree(preorder []int, inorder []int) *TreeNode {
 - [冗余连接（Medium）](https://leetcode-cn.com/problems/redundant-connection/)
 
 ```go
+// DFS找环法
 func findRedundantConnection(input [][]int) (ans []int) {
     var max func(x,y int) int
     max = func(x,y int) int {
@@ -347,6 +375,7 @@ func findRedundantConnection(input [][]int) (ans []int) {
 - [课程表（Medium）](https://leetcode-cn.com/problems/course-schedule/)
 
 ```go
+// BFS拓扑排序模板
 func canFinish(numCourses int, prerequisites [][]int) bool {
 	n := numCourses
 	edges := make([][]int, n) // [[],[]]
@@ -397,6 +426,7 @@ func canFinish(numCourses int, prerequisites [][]int) bool {
 - [电话号码的字母组合（Medium）](lems/letter-combinations-of-a-phone-number/)
 
 ```go
+// DFS
 func letterCombinations(digits string) (ans []string) {
     if len(digits) == 0 { return }
     edges := map[string]string{}
@@ -430,6 +460,7 @@ func letterCombinations(digits string) (ans []string) {
 - [N 皇后（Hard）](https://leetcode-cn.com/problems/n-queens/)
 
 ```go
+// DFS，排列模板 + 合法性检查
 func solveNQueens(n int) (res [][]string) {
     ans := [][]int{}
 
@@ -486,8 +517,8 @@ func solveNQueens(n int) (res [][]string) {
 - [岛屿数量（Medium）](https://leetcode-cn.com/problems/number-of-islands/)
 
 ```go
+// DFS做法
 func numIslands(grid [][]byte) (ans int) {
-	// DFS做法
 	m := len(grid)
 	n := len(grid[0])
 
@@ -527,9 +558,53 @@ func numIslands(grid [][]byte) (ans int) {
 }
 ```
 
-- [最小基因变化（Medium）]()
+- [最小基因变化（Medium）](https://leetcode-cn.com/problems/minimum-genetic-mutation/)
 
 ```go
+// BFS
+func minMutation(start string, end string, bank []string) int {
+	var mutationMap = map[uint8][3]string{
+		'A': [...]string{"T", "G", "C"},
+		'C': [...]string{"T", "G", "A"},
+		'T': [...]string{"A", "G", "C"},
+		'G': [...]string{"T", "A", "C"},
+	}
+	var idxOf func(string, []string) int
+	idxOf = func(str string, bank []string) int {
+		for i, s := range bank {
+			if s == str {
+				return i
+			}
+		}
+		return -1
+	}
+
+	if (idxOf(end, bank) == -1) { return -1 } // 目标string不在bank里，不需要搜索
+
+	isUsed := make([]bool, len(bank))
+
+	queue := []string{start} // 放入队列
+	count := 0
+	for len(queue) > 0 { // 队列不为空时
+		l := len(queue)
+		for i := 0; i < l; i++ {
+			curr := queue[i]
+			if curr == end { return count }
+			for j := 0; j < len(curr); j++ {
+				for _, s := range mutationMap[curr[j]] {
+					if idx := idxOf(curr[:j] + s + curr[j+1:], bank); // curr[:j] 前闭后开
+                        idx != -1 && !isUsed[idx] { 、、
+						queue = append(queue, bank[idx])
+						isUsed[idx] = true
+					}
+				}
+			}
+		}
+		count++ // 没找到目标，但是找到一个存在于bank的结果
+		queue = queue[l:] // 搜索过的部分截断，只取新进的部分作为队列
+	}
+	return -1
+}
 ```
 
 - [矩阵中的最长递增路径（Hard）]()
