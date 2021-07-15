@@ -12,7 +12,76 @@
 - [设计推特（Medium）](https://leetcode-cn.com/problems/design-twitter/)
 
 ```go
+type Twitter struct {
+	user map[int][]int
+	tweet [][2]int
+}
 
+
+/** Initialize your data structure here. */
+func Constructor() Twitter {
+	return Twitter{user: make(map[int][]int)}
+}
+
+
+/** Compose a new tweet. */
+func (this *Twitter) PostTweet(userId int, tweetId int)  {
+	this.tweet = append(this.tweet, [2]int{userId, tweetId}) // 存放用户id - 推特id
+}
+
+
+/** Retrieve the 10 most recent tweet ids in the user's news feed. Each item in the news feed must be posted by users who the user followed or by the user herself. Tweets must be ordered from most recent to least recent. */
+func (this *Twitter) GetNewsFeed(userId int) []int {
+	userIds := this.user[userId]
+	userIds = append(userIds, userId) // 把当前用户id推进数组
+	res := []int{}
+	for i := len(this.tweet) - 1; len(res) < 10 && i >= 0; i-- { // 遍历推特集合
+		for j := 0; j < len(userIds); j++ { // 检查推特是否属于关注的用户或者自己
+			if this.tweet[i][0] == userIds[j] {
+				res = append(res, this.tweet[i][1]) // 存入结果集
+				break
+			}
+		}
+	}
+	return res
+}
+
+
+/** Follower follows a followee. If the operation is invalid, it should be a no-op. */
+func (this *Twitter) Follow(followerId int, followeeId int)  {
+	for i := 0; i < len(this.user[followerId]); i++ {
+		if this.user[followerId][i] == followeeId {
+			return // 重复则退出
+		}
+	}
+	this.user[followerId] = append(this.user[followerId], followeeId)
+}
+
+
+/** Follower unfollows a followee. If the operation is invalid, it should be a no-op. */
+func (this *Twitter) Unfollow(followerId int, followeeId int)  {
+	for i := 0; i < len(this.user[followerId]); i++ {
+		if this.user[followerId][i] == followeeId {
+			// 判断该位置是否在末尾
+			if i == len(this.user[followerId]) - 1 {
+				this.user[followerId] = this.user[followerId][:i] // 前闭后开
+			} else {
+				this.user[followerId]  = append(this.user[followerId][:i], this.user[followerId][i+1:]...) // 前闭后开 + 前闭至结束
+			}
+			return // 找到，处理完则退出
+		}
+	}
+}
+
+
+/**
+ * Your Twitter object will be instantiated and called as such:
+ * obj := Constructor();
+ * obj.PostTweet(userId,tweetId);
+ * param_2 := obj.GetNewsFeed(userId);
+ * obj.Follow(followerId,followeeId);
+ * obj.Unfollow(followerId,followeeId);
+ */
 ```
 
 - [数据流的中位数（选做）（Hard）](https://leetcode-cn.com/problems/find-median-from-data-stream/)
@@ -24,7 +93,25 @@
 - [寻找旋转排序数组中的最小值 II （Hard）](https://leetcode-cn.com/problems/find-minimum-in-rotated-sorted-array-ii/)
 
 ```go
+func findMin(nums []int) int {
+	if len(nums) == 1 {
+		return nums[0]
+	}
 
+	l := 0
+	r := len(nums) - 1
+	for l < r {
+		mid := (l + r) >> 1
+		if nums[mid] > nums[r] {
+			l = mid + 1
+		} else if nums[mid] < nums[r] {
+			r = mid
+		} else {
+			r--
+		}
+	}
+	return nums[l]
+}
 ```
 
 ## 二叉堆
