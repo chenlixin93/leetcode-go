@@ -86,8 +86,158 @@ func (this *Twitter) Unfollow(followerId int, followeeId int)  {
 
 - [数据流的中位数（选做）（Hard）](https://leetcode-cn.com/problems/find-median-from-data-stream/)
 
-```go
+**解法1-简单排序**
 
+```go
+// 解题思路
+// 简单插入数组
+// 找中位数前排好序，长度为奇数取a[mid]，偶数取a[mid] + a[mid - 1]的和 * 0.5
+```
+
+**解法2-大顶堆小顶堆**
+
+```go
+// 解题思路
+// 维护大顶堆和小顶堆，大顶堆的数均小于小顶堆，保持大小顶堆之间相差一个数
+// 数据流长度为奇数，那么最终大顶堆会多一个数，则是中位数；否则取两个堆的堆顶元素之和 * 0.5
+
+// 示例
+// 数据流[1, 2, 3, 4, 5]依次加入堆
+// 大顶堆lo、小顶堆hi; 大顶堆的数均小于小顶堆;
+// => 1
+// init:  lo[]  hi[]
+// step1: lo[1] hi[]
+// step2: lo[]  hi[1]
+// step3: len(lo) < len(hi) => lo[1] hi[]
+// => 2
+// init:  lo[1]   hi[]
+// step1: lo[2,1] hi[]
+// step2: lo[1]   hi[2]
+// step3: len(lo) == len(hi), 不操作
+// => 3
+// init:  lo[1]   hi[2]
+// step1: lo[3,1] hi[2]
+// step2: lo[1]   hi[2,3]
+// step3: len(lo) < len(hi) => lo[2,1] hi[3]
+// => 4
+// init:  lo[2,1]   hi[3]
+// step1: lo[4,2,1] hi[3]
+// step2: lo[2,1]   hi[3,4]
+// step3: len(lo) == len(hi), 不操作
+// => 5
+// init:  lo[2,1]   hi[3,4]
+// step1: lo[5,2,1] hi[3,4]
+// step2: lo[2,1]   hi[3,4,5]
+// step3: len(lo) < len(hi) => lo[3,2,1] hi[4,5]
+
+// 最终运行效率，364ms & 23.4MB 有点慢
+import "container/heap"
+
+type MedianFinder struct {
+    maxHeap *MaxIntHeap
+    minHeap *MinIntHeap
+}
+
+
+/** initialize your data structure here. */
+func Constructor() MedianFinder {
+    res := MedianFinder{maxHeap: &MaxIntHeap{},minHeap: &MinIntHeap{}}
+    heap.Init(res.maxHeap)
+    heap.Init(res.minHeap)
+    return res
+}
+
+
+func (this *MedianFinder) AddNum(num int)  {
+    heap.Push(this.maxHeap, num) // 先入大顶堆
+
+    heap.Push(this.minHeap, heap.Pop(this.maxHeap)) // 从大顶堆Pop出堆顶元素（即当前堆最大数）
+
+    for this.maxHeap.Len() < this.minHeap.Len() { // 保持大小顶堆之间相差一个数
+        heap.Push(this.maxHeap, heap.Pop(this.minHeap))
+    }
+}
+
+
+func (this *MedianFinder) FindMedian() float64 {
+    if this.maxHeap.Len() > this.minHeap.Len() {
+        return float64(this.maxHeap.Top())
+    }
+
+    return float64(this.maxHeap.Top() + this.minHeap.Top()) * 0.5
+}
+
+// 实现小顶堆
+type MinIntHeap []int
+
+func (h MinIntHeap) Len() int {
+    return len(h)
+}
+
+func (h MinIntHeap) Less(i,j int) bool {
+    return h[i] < h[j]
+}
+
+func (h MinIntHeap) Swap(i,j int) {
+    h[i],h[j] = h[j],h[i]
+}
+
+func (h *MinIntHeap) Push(x interface{}) {
+    *h = append(*h, x.(int)) // .(type)
+}
+
+func (h *MinIntHeap) Pop() interface{} {
+    old := *h
+    n := len(old)
+    x := old[n - 1]
+    *h = old[0:n-1] // 前闭后开
+    return x 
+}
+
+func (h *MinIntHeap) Top() int {
+    old := *h
+    x := old[0]
+    return x
+}
+
+// 实现大顶堆
+type MaxIntHeap []int
+
+func (h MaxIntHeap) Len() int {
+    return len(h)
+}
+
+func (h MaxIntHeap) Less(i,j int) bool {
+    return h[i] > h[j]
+}
+
+func (h MaxIntHeap) Swap(i,j int) {
+    h[i],h[j] = h[j],h[i]
+}
+
+func (h *MaxIntHeap) Push(x interface{}) {
+    *h = append(*h, x.(int)) // .(type)
+}
+
+func (h *MaxIntHeap) Pop() interface{} {
+    old := *h
+    n := len(old)
+    x := old[n - 1]
+    *h = old[0:n-1] // 前闭后开
+    return x 
+}
+
+func (h *MaxIntHeap) Top() int {
+    old := *h
+    x := old[0]
+    return x
+}
+/**
+ * Your MedianFinder object will be instantiated and called as such:
+ * obj := Constructor();
+ * obj.AddNum(num);
+ * param_2 := obj.FindMedian();
+ */
 ```
 
 - [寻找旋转排序数组中的最小值 II （Hard）](https://leetcode-cn.com/problems/find-minimum-in-rotated-sorted-array-ii/)
@@ -266,7 +416,44 @@ func insertIntoBST(root *TreeNode, val int) *TreeNode {
 - [后继者（Medium）](https://leetcode-cn.com/problems/successor-lcci/)
 
 ```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func inorderSuccessor(root *TreeNode, p *TreeNode) *TreeNode {
+    var find func(root *TreeNode, val int) *TreeNode
+    find = func(root *TreeNode, val int) *TreeNode {
+        var ans *TreeNode
+        cur := root
 
+        for cur != nil {
+            if cur.Val > val { //case2: 当后继存在于经过的点(找到一个>val的最小节点)
+                if ans == nil || ans.Val > cur.Val {
+                    ans = cur
+                }
+            }
+            if cur.Val == val {
+                if cur.Right != nil { //case1: 检索到val且右子树存在，右子树一路向左
+                    cur = cur.Right
+                    for cur.Left != nil { cur = cur.Left }
+                    return cur
+                }
+                break
+            }
+            if val < cur.Val { 
+                cur = cur.Left
+            } else {
+                cur = cur.Right
+            }
+        }
+        return ans
+    }
+    return find(root, p.Val)
+}
 ```
 
 - [删除二叉搜索树中的节点（Medium）](https://leetcode-cn.com/problems/delete-node-in-a-bst/)
@@ -313,7 +500,26 @@ func deleteNode(root *TreeNode, key int) *TreeNode {
 - [二分查找（Easy）](https://leetcode-cn.com/problems/binary-search/)
 
 ```go
+// 模版2
+func search(nums []int, target int) int {
 
+	left := 0
+	right := len(nums) - 1
+
+	for left <= right {
+		mid := (left + right) >> 1
+		if nums[mid] == target {
+			return mid
+		}
+
+		if nums[mid] > target {
+			right = mid - 1
+		} else {
+			left = mid + 1
+		}
+	}
+	return -1
+}
 ```
 
 - [在排序数组中查找元素的第一个和最后一个位置（Medium）](https://leetcode-cn.com/problems/find-first-and-last-position-of-element-in-sorted-array/)
@@ -375,7 +581,29 @@ func mySqrt(x int) int {
 - [搜索二维矩阵（Medium）](https://leetcode-cn.com/problems/search-a-2d-matrix/)
 
 ```go
+// 简单易懂，双百解法
+func searchMatrix(matrix [][]int, target int) bool {
+    if len(matrix) == 0 || len(matrix[0]) == 0 {
+        return false
+    }
 
+    row := len(matrix) - 1 // 从最后一行搜起
+    col := 0
+    for row >= 0 && col < len(matrix[0]) {
+        if matrix[row][col] == target {
+            return true
+        }
+
+        if matrix[row][col] < target { 
+            col++ // 大于左下角，则向右移动一位
+        } else {
+            row-- // 小于左下角，则退后一行
+        }
+    }
+    return false
+}
+
+// 二分，后续补上
 ```
 
 - [寻找旋转排序数组中的最小值（Medium）](https://leetcode-cn.com/problems/find-minimum-in-rotated-sorted-array/)
