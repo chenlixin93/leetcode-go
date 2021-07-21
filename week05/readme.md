@@ -330,6 +330,51 @@ func max(a,b int) int {
 - [数组中的第 K 个最大元素（Medium）](https://leetcode-cn.com/problems/kth-largest-element-in-an-array/)
 
 ```go
+// 解法1：大根堆
+import "container/heap"
+
+func findKthLargest(nums []int, k int) int {
+	maxHeap := &MaxIntHeap{}
+	heap.Init(maxHeap)
+	
+	length := len(nums)
+	for length > 0 { // 构建大根堆
+		heap.Push(maxHeap, nums[length - 1])
+		length--
+	}
+	for k - 1 > 0 { // 取k-1次堆顶
+		heap.Pop(maxHeap)
+		k--
+	}
+	return heap.Pop(maxHeap).(int)
+}
+
+// 实现大顶堆
+type MaxIntHeap []int
+
+func (h MaxIntHeap) Len() int {
+    return len(h)
+}
+
+func (h MaxIntHeap) Less(i,j int) bool {
+    return h[i] > h[j]
+}
+
+func (h MaxIntHeap) Swap(i,j int) {
+    h[i],h[j] = h[j],h[i]
+}
+
+func (h *MaxIntHeap) Push(x interface{}) {
+    *h = append(*h, x.(int)) // .(type)
+}
+
+func (h *MaxIntHeap) Pop() interface{} {
+    old := *h
+    n := len(old)
+    x := old[n - 1]
+    *h = old[0:n-1] // 前闭后开
+    return x
+}
 ```
 
 - [货仓选址](https://www.acwing.com/problem/content/description/106/)
@@ -340,6 +385,74 @@ func max(a,b int) int {
 - [翻转对（Hard）](https://leetcode-cn.com/problems/reverse-pairs/)
 
 ```go
+// 解题思路
+// 把数组一分为二，左边下标天然小于右边
+// 当左右都排好序后，左边、右边分别统计完，只需要加上左边下标和右边下标比较的情况 
+// 子问题的最细粒度的情况就是左右各一个数
+
+// 解法：归并排序 + 计算
+var ans int // 全局变量
+func reversePairs(nums []int) int {
+	ans = 0 // 注意清0，不然会存着上一次的结果
+    mergeSort(nums, 0, len(nums) - 1)
+	return ans
+}
+
+// 归并排序part1
+func mergeSort(nums []int, left,right int) {
+    if right <= left { return }
+    mid := (left + right) >> 1
+    mergeSort(nums, left, mid)
+    mergeSort(nums, mid + 1, right)
+    calculate(nums, left, mid, right)
+    merge(nums, left, mid, right)
+}
+
+// 计算
+func calculate(nums []int, left,mid,right int) {
+    i := left
+    j := mid
+    for ; i <= mid; i++ {
+        for j < right && nums[i] > 2 * nums[j + 1] {
+            j++
+        }
+        ans += j - mid // 右边符合条件的次数
+    }
+}
+
+// 归并排序part2:对left...right之间的数进行排序
+func merge(nums []int, left,mid,right int) {
+    tmp := make([]int, right - left + 1) // 新开的临时数组
+    i := left
+    j := mid + 1
+    k := 0
+
+    for i <= mid && j <= right {
+        if nums[i] <= nums[j] { // 哪个小取哪个放入临时数组
+            tmp[k] = nums[i]
+            i++
+        } else {
+            tmp[k] = nums[j]
+            j++
+        }
+        k++
+    }
+
+    for i <= mid { // 把剩余的数取尽
+        tmp[k] = nums[i]
+        k++
+        i++
+    }
+    for j <= right {
+        tmp[k] = nums[j]
+        k++
+        j++
+    }
+
+    for p := 0; p < len(tmp); p++ {
+        nums[left + p] = tmp[p]
+    }
+}
 ```
 
 ## 贪心
