@@ -470,19 +470,184 @@ func merge(nums []int, left,mid,right int) {
 - [分发饼干（Easy）](https://leetcode-cn.com/problems/assign-cookies/description/)
 
 ```go
+// 效率 32ms；
+// 使用快排代替内置排序算法：28ms
+func findContentChildren(g []int, s []int) int {
+    // 大饼干给大孩子，小饼干给小孩子
+    sort.Ints(g) // 胃口
+    sort.Ints(s) // 饼干
+    j := 0
+    ans := 0
+    for i := 0; i < len(g); i++ {
+        for j < len(s) && s[j] < g[i] { j++ } // 不满足就跳过
+        if j < len(s) { 
+            j++
+            ans++
+        }
+    }
+    return ans
+}
 ```
 
 - [买卖股票的最佳时机 II （Easy）](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-ii/)
 
 ```go
+func maxProfit(prices []int) int {
+    // 持有股票，卖不卖？ 往后看一天，如果明天跌，今天肯定卖
+    // 没有股票，买不买？ 往后看一天，如果明天涨，那肯定买
+    // 最优买入不会损失收益，那么进一步推导出：
+    // 获得所有 price[i] - price[i - 1] > 0 的收益
+    ans := 0
+    for i := 1; i < len(prices); i++ {
+        if (prices[i] - prices[i - 1]) > 0 {
+            ans += prices[i] - prices[i - 1]
+        }
+    }
+    return ans
+}
 ```
 
 - [跳跃游戏 II （Medium）](https://leetcode-cn.com/problems/jump-game-ii/)
 
 ```go
+func jump(nums []int) int {
+    // 决策包容性：同样是跳1步，从 a 跳到 “能跳得更远位置c”的 b，
+    // 未来的可达集合包含了跳到其他b的可达集合，所以这个局部最优决策是正确的
+    now := 0
+    ans := 0
+    right := 0
+    //next := 0
+    for now < len(nums) - 1 {
+        if nums[now] == 0 { return -1 }
+
+        right = now + nums[now]
+        if right >= len(nums) - 1 { // 到达最后
+            return ans + 1
+        }
+        // 从now出发可以到[now+1, right]
+        next := now + 1
+        for i := now + 2; i <= right; i++ { // 搜索[now+1, right]之间能跳到最远c的某个b点
+            next_right := i + nums[i]
+            if next_right > (next + nums[next]) {
+                next = i
+            }
+        }
+        now = next
+        ans++
+    }
+    return ans
+}
 ```
 
 - [完成所有任务的最少初始能量（Hard）](https://leetcode-cn.com/problems/minimum-initial-energy-to-finish-tasks/)
 
+图示
+
+---------|------|-----|----------|
+
+         i   i+1  i+2      n
+
+推导过程：
+```
+定义相邻两个任务 i 、i+1 完成的顺序是 p->q 或者 q->p
+先做 p ，再做 q，那么就如图示的顺序 i -> i+1
+定义做 p 之前至少需要的初始能量为 min[p]，做完p任务实际消耗 a[p]
+定义做 q 之前至少需要的初始能量为 min[q]，做完q任务实际消耗 a[q]
+完成 i+2 ... n 的部分需要的能量设为 S，即达到 i+2 时，至少还有 S 的能量
+```
+
+part1
+```
+那么，先做 p 所需的初始能量 max（min[p], i 到 n 之间的能量条）
+如果 min[p] 小于后者，那肯定完不成 p -> q，所以是取较大的能量数;
+
+i 到 n 之间的能量条 ： a[p] + max（min[q], a[q] + S）
+第二项同理，如果 min[q] 小于后者，也完不成 q -> i+2；
+
+也就有第一个式子：
+ max（min[p], a[p] + max（min[q], a[q] + S））
+```
+
+part2
+```
+先做 q 所需的初始能量，同理可得：
+ max（min[q], a[q] + max（min[p], a[p] + S））
+```
+
+part3
+```
+假设先做 p 比较优，则有 part1 < part2
+
+拆括号，
+max（min[p], a[p]+min[q], a[p]+a[q]+S） <
+max（min[q], a[q]+min[p], a[q]+a[p]+S）
+
+消除第三项后，
+max（min[p], a[p]+min[q]）< max（min[q], a[q]+min[p]）
+由于前者第二项包含了后者第一项，后者第二项包含了前者第一项，
+所以min[p]、min[q]在这个式子里没有决定性，将其消除
+
+那么必定有 a[p]+min[q] < a[q]+min[p]
+最终得出 a[p] - min[p] < a[q] - min[q]
+```
+
+代码
 ```go
+func minimumEffort(tasks [][]int) int {
+    // 贪心策略：按照 actual - min 升序排序，以此顺序完成任务
+    // 也可以理解位 消耗小，门槛大的，是先做的条件
+    length := len(tasks)
+    // 保存数组下标
+    var idx []int
+    for i := 0; i < length; i++ {
+        idx = append(idx, i)
+    }
+    // 使用快排进行双关键字排序
+    quickSort(idx, 0, length - 1, tasks)
+    // 正序做任务，但是计算要倒序
+    energy := 0
+    for i := len(idx) - 1; i >= 0; i-- {
+        // 门槛和实际消耗哪个大取哪个
+        energy = max(tasks[idx[i]][1], energy + tasks[idx[i]][0])
+    }
+    return energy
+}
+
+// 快排，带pivot
+func quickSort(nums []int, l,r int, tasks [][]int) {
+    if l >= r { return }
+    pivot := partition(nums, l, r, tasks)
+    quickSort(nums, l, pivot, tasks)
+    quickSort(nums, pivot + 1, r, tasks)
+    return
+}
+func partition(nums []int, l,r int, tasks [][]int) int {
+    pivot := l + rand.Intn(r - l + 1) // 随机 48ms
+    pivotVal := nums[pivot] 
+    for l <= r {
+        for isALessB(tasks[nums[l]], tasks[pivotVal]) { l++ }
+        for isAGreatB(tasks[nums[r]], tasks[pivotVal]) { r-- }
+        if l <= r {
+            nums[l],nums[r] = nums[r],nums[l]
+            l++
+            r--
+        }
+    }
+    return r
+}
+
+// 定义数组a是否小于数组b
+func isALessB (a []int, b []int) bool {
+    return a[0] - a[1] < b[0] - b[1]
+}
+
+// 定义数组a是否大于数组b
+func isAGreatB (a []int, b []int) bool {
+    return a[0] - a[1] > b[0] - b[1]
+}
+
+func max(a,b int) int {
+    if a > b { return a }
+    return b
+}
 ```
