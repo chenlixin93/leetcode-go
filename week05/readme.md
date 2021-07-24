@@ -14,6 +14,34 @@
 - [在 D 天内送达包裹的能力（Medium）](https://leetcode-cn.com/problems/capacity-to-ship-packages-within-d-days/)
 
 ```go
+func shipWithinDays(weights []int, days int) int {
+    // 二分答案的题型
+    // 如何定义左右边界？
+    // 一个包裹不能拆开发，所以左边界应该是最大重量的包裹；
+    // 右边界是所有包裹重量之和；
+    // 在[左，右]搜索出合适的第一个符合条件的答案
+    left := 0
+    right := 0
+    for _, w := range weights {
+        if w > left {
+            left = w
+        }
+        right += w
+    }
+    return left + sort.Search(right -  left, func(x int) bool {
+        x += left // 加上left这个左边界
+        day := 1 // 需要运送的天数
+        sum := 0 // 当前这一天已经运送的包裹重量之和
+        for _, w := range weights {
+            if sum+w > x {
+                day++
+                sum = 0 // 清0
+            }
+            sum += w
+        }
+        return day <= days
+    })
+}
 ```
 
 - [在线选举（Medium）](https://leetcode-cn.com/problems/online-election/)
@@ -24,6 +52,33 @@
 - [爱吃香蕉的珂珂（Medium）](https://leetcode-cn.com/problems/koko-eating-bananas/)
 
 ```go
+func minEatingSpeed(piles []int, h int) int {
+    left := 1 // 最小速度
+    right := piles[0]
+    for _, p := range piles { // 最大速度也只能是香蕉数量最大的堆
+        if p >= right {
+            right = p
+        }
+    }
+
+    for left < right {
+        mid := left + (right - left) >> 1
+        if !possible(piles, h, mid) {
+            left = mid + 1 // 实现不了，速度太慢，舍弃左部分区间
+        } else {
+            right = mid // 速度太快，舍弃右部分区间
+        }
+    }
+    return left
+}
+
+func possible(piles []int, H int, K int) bool {
+    time := 0
+    for _,p := range piles {
+        time += (p - 1) / K + 1 // 上取整
+    }
+    return time <= H
+}
 ```
 
 - [区间和的个数（选做）（Hard）](https://leetcode-cn.com/problems/count-of-range-sum/)
@@ -474,6 +529,28 @@ func merge(nums []int, left,mid,right int) {
 - [柠檬水找零（Easy）](https://leetcode-cn.com/problems/lemonade-change/description/)
 
 ```go
+var count map[int]int
+func lemonadeChange(bills []int) bool {
+    count = map[int]int{5: 0,10: 0,20: 0}
+    for _, bill := range bills {
+        count[bill]++
+        // 减去5元费用后看是否在剩下的零钱里面找完
+        if !exchange(bill - 5) { return false }
+    }
+    return true
+}
+
+func exchange(amount int) bool {
+    for amount >= 10 && count[10] > 0 {
+        amount -= 10
+        count[10]--
+    }
+    for amount >= 5 && count[5] > 0 {
+        amount -= 5
+        count[5]--
+    }
+    return amount == 0
+}
 ```
 
 - [分发饼干（Easy）](https://leetcode-cn.com/problems/assign-cookies/description/)
