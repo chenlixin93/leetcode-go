@@ -629,6 +629,99 @@ func findMin(nums []int) int {
 ## 三分查找
 
 - [寻找峰值（Medium）](https://leetcode-cn.com/problems/find-peak-element/)
+
+```go
+
+```
 - [猜数字大小（Easy）](https://leetcode-cn.com/problems/guess-number-higher-or-lower/)
+
+```go
+
+```
+
 - [分割数组的最大值（Hard）](https://leetcode-cn.com/problems/split-array-largest-sum/)
+
+```go
+func splitArray(nums []int, m int) int {
+	// 求分割数量达到 m 个的时候，子数组和的最大值最小
+	// 也就是说存在一个区间，最大值从左边界到右边界移动时，
+	// 第一个达到的值即为最小(符合条件 m 个非空的连续子数组)
+
+	left := 0 // 下界：每个分一组
+	right := 0 // 上界：全部放一组
+	for i := 0; i < len(nums); i++ {
+		left = max(left, nums[i])
+		right += nums[i]
+	}
+	for left < right {
+		mid := (left + right) >> 1
+		// 第一个使得判定问题得到true的位置
+		if isValid(nums, m, mid) {
+			right = mid
+		} else {
+			left = mid + 1
+		}
+	}
+	return right 
+	// 二分模板！！！
+}
+
+// 判定把nums分成 <= m 组，每组和 <= T
+func isValid(nums []int, m int, T int) bool {
+	groupSum := 0
+	groupCount := 1
+	for i := 0; i < len(nums); i++ {
+		if groupSum + nums[i] <= T {
+			groupSum += nums[i] // 放进当前数组，不超
+		} else {
+			groupCount++ // 超了，新开一组
+			groupSum = nums[i]
+		}
+	}
+	return groupCount <= m
+}
+
+func max(a,b int) int {
+	if a > b { return a }
+	return b
+}
+```
+
 - [制作 m 束花所需的最少天数（Medium）](https://leetcode-cn.com/problems/minimum-number-of-days-to-make-m-bouquets/)
+
+```go
+func minDays(bloomDay []int, m int, k int) int {
+    MAX := 1000000001
+    left := 0
+    right := MAX
+    for left < right {
+        mid := (left + right) >> 1
+        if bouquetsOnDay(mid, bloomDay, k) >= m { // ?
+            right = mid
+        } else {
+            left = mid + 1
+        }
+    }
+    if right == MAX {
+        right = -1
+    }
+    return right
+}
+
+func bouquetsOnDay(day int, bloomDay []int, k int) int {
+    bouquets := 0
+    consecutive := 0
+    for _, bloom := range bloomDay {
+        if bloom <= day {
+            consecutive++
+            if consecutive == k {
+                bouquets++ // 成一束, 另起一束
+                consecutive = 0
+            }
+        } else {
+            consecutive = 0 // 当前数字大于假定的开花时间，不能开花
+        }
+    }
+    return bouquets // 返回花束数量
+}
+```
