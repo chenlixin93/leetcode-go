@@ -193,11 +193,66 @@ func max(a,b int) int {
 - [买卖股票的最佳时机（Easy）](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock/)
 
 ```go
+func maxProfit(prices []int) int {
+
+	n := len(prices)
+	if n == 0 { return 0 }
+
+	dp := make([][]int, n)
+	for i := range dp {
+		dp[i] = make([]int, 2)
+	}
+
+	dp[0][0] = 0 // 没有股票，也没有利润
+	dp[0][1] = -prices[0] // 买入股票，负利润
+
+	for i := 1; i < n; i++ {
+		// 当前没有持有股票的最大利润, 可能是前一天没有持有股票，或者前一天持有股票，今天卖出
+		dp[i][0] = max(dp[i - 1][0], dp[i - 1][1] + prices[i])
+		// 当前持有股票的最大利润, 可能是前一天持有股票的利润，或者前一天没有股票，今天买入
+		// 注意题目只允许买入一次，也就是说之前没有买入也没有卖出过，那么持有的金额一定是初始状态，即买入后利润为 dp[0][0] - prices[i] = - prices[i]
+		dp[i][1] = max(dp[i - 1][1], - prices[i])
+	}
+
+	return dp[n - 1][0] // 手里持有的现金（利润）达到最大，此时一定不是买入股票（只允许买入一次，还没卖出肯定达不到最大）
+}
+
+func max(a,b int) int {
+	if a > b { return a }
+	return b
+}
 ```
 
 - [买卖股票的最佳时机 II （Easy）](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-ii/)
 
 ```go
+func maxProfit(prices []int) int {
+	// 注意题目没有限制买入卖出的次数，但是仍要遵守先买入才能卖出
+	n := len(prices)
+	if n == 0 { return 0 }
+
+	dp := make([][]int, n)
+	for i := range dp {
+		dp[i] = make([]int, 2)
+	}
+
+	dp[0][0] = 0 // 没有股票，也没有利润
+	dp[0][1] = -prices[0] // 买入股票，负利润
+
+	for i := 1; i < n; i++ {
+		// 当前没有持有股票的最大利润, 可能是前一天没有持有股票，或者前一天持有股票，今天卖出
+		dp[i][0] = max(dp[i - 1][0], dp[i - 1][1] + prices[i])
+		// 当前持有股票的最大利润, 可能是前一天持有股票的利润，或者前一天没有股票，今天买入
+		dp[i][1] = max(dp[i - 1][1], dp[i - 1][0] - prices[i])
+	}
+
+	return max(dp[n - 1][0], dp[n - 1][1])
+}
+
+func max(a,b int) int {
+	if a > b { return a }
+	return b
+}
 ```
 
 - [买卖股票的最佳时机 III （Easy）](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-iii/)
