@@ -258,16 +258,149 @@ func max(a,b int) int {
 - [买卖股票的最佳时机 III （Easy）](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-iii/)
 
 ```go
+func maxProfit(prices []int) int {
+    // 注意题目限制完整交易的次数为2，买入前必须卖掉之前的股票
+    n := len(prices)
+    if n == 0 { return 0 }
+    // 加一位，方便后续计算 i-1
+    new_prices := make([]int, n + 1)
+    new_prices[0] = 0
+    for i := 1; i <= n; i++ {
+        new_prices[i] = prices[i-1]
+    }
+
+    // 定义dp[i][j][k]
+    dp := make([][][]int, n + 1)
+    c := 2 // 最多两笔交易
+    for i := range dp {
+        dp[i] = make([][]int, 2)
+        for j := range dp[i] {
+            dp[i][j] = make([]int, c + 1)
+            for k := range dp[i][j] {
+                dp[i][j][k] = -1000000000 // 负无穷
+            }
+        }
+    }
+
+    dp[0][0][0] = 0 // 第0天的状态没有持有股票、也没有交易次数
+    for i := 1; i <= n; i++ {
+        for j := 0; j <= 1; j++ {
+            for k := 0; k <= c; k++ {
+                dp[i][j][k] = dp[i-1][j][k]
+                if j == 0 { 
+                    // 当前不持有股票 = 前一天没有股票或者前一天持有股票，今天卖出
+                    dp[i][0][k] = max(dp[i][0][k], dp[i-1][1][k] + new_prices[i])
+                }
+                if j == 1 && k > 0 { 
+                    // 当前持有股票 = 前一天已有股票或者前一天没有股票，今天买入
+                    //（交易次数只在买入时发生变化，从 k-1 转移到当前 k 次）
+                    dp[i][1][k] = max(dp[i][1][k], dp[i-1][0][k-1] - new_prices[i])
+                }
+            }
+        }
+    }
+
+    ans := 0 
+    for k := 0; k <= c; k++ {
+        ans = max(ans, dp[n][0][k])
+    }
+    return ans
+}
+
+func max(a,b int) int {
+    if a > b {return a}
+    return b
+}
 ```
 
 - [买卖股票的最佳时机 IV （Hard）](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-iv/)
 
 ```go
+func maxProfit(k int, prices []int) int {
+    // 注意题目限制完整交易的次数为k，买入前必须卖掉之前的股票
+    n := len(prices)
+    if n == 0 { return 0 }
+    // 加一位，方便后续计算 i-1
+    new_prices := make([]int, n + 1)
+    new_prices[0] = 0
+    for i := 1; i <= n; i++ {
+        new_prices[i] = prices[i-1]
+    }
+
+    // 定义dp[i][j][k]
+    dp := make([][][]int, n + 1)
+    c := k // 最多k笔交易
+    for i := range dp {
+        dp[i] = make([][]int, 2)
+        for j := range dp[i] {
+            dp[i][j] = make([]int, c + 1)
+            for k := range dp[i][j] {
+                dp[i][j][k] = -1000000000 // 负无穷
+            }
+        }
+    }
+
+    dp[0][0][0] = 0 // 第0天的状态没有持有股票、也没有交易次数
+    for i := 1; i <= n; i++ {
+        for j := 0; j <= 1; j++ {
+            for k := 0; k <= c; k++ {
+                dp[i][j][k] = dp[i-1][j][k]
+                if j == 0 { 
+                    // 当前不持有股票 = 前一天没有股票或者前一天持有股票，今天卖出
+                    dp[i][0][k] = max(dp[i][0][k], dp[i-1][1][k] + new_prices[i])
+                }
+                if j == 1 && k > 0 { 
+                    // 当前持有股票 = 前一天已有股票或者前一天没有股票，今天买入
+                    //（交易次数只在买入时发生变化，从 k-1 转移到当前 k 次）
+                    dp[i][1][k] = max(dp[i][1][k], dp[i-1][0][k-1] - new_prices[i])
+                }
+            }
+        }
+    }
+
+    ans := 0 
+    for k := 0; k <= c; k++ {
+        ans = max(ans, dp[n][0][k])
+    }
+    return ans
+}
+
+func max(a,b int) int {
+    if a > b {return a}
+    return b
+}
 ```
 
 - [买卖股票的最佳时机含手续费（Medium）](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-with-transaction-fee/)
 
 ```go
+func maxProfit(prices []int, fee int) int {
+    // 注意题目没有限制买入卖出的次数，套用买卖股票2的模版即可，买入时减去fee
+	n := len(prices)
+	if n == 0 { return 0 }
+
+	dp := make([][]int, n)
+	for i := range dp {
+		dp[i] = make([]int, 2)
+	}
+
+	dp[0][0] = 0 // 没有股票，也没有利润
+	dp[0][1] = - prices[0] - fee // 买入股票，负利润
+
+	for i := 1; i < n; i++ {
+		// 当前没有持有股票的最大利润, 可能是前一天没有持有股票，或者前一天持有股票，今天卖出
+		dp[i][0] = max(dp[i - 1][0], dp[i - 1][1] + prices[i])
+		// 当前持有股票的最大利润, 可能是前一天持有股票的利润，或者前一天没有股票，今天买入
+		dp[i][1] = max(dp[i - 1][1], dp[i - 1][0] - prices[i] - fee)
+	}
+
+	return max(dp[n - 1][0], dp[n - 1][1])
+}
+
+func max(a,b int) int {
+	if a > b { return a }
+	return b
+}
 ```
 
 - [最佳买卖股票时机含冷冻期（Medium）](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-with-cooldown/)
