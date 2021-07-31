@@ -556,7 +556,71 @@ func max(a,b int) int {
 
 - [编辑距离（重点题）（Hard）](https://leetcode-cn.com/problems/edit-distance/)
 
+来自@**Johnny_牧云**的解析
+https://leetcode-cn.com/problems/edit-distance/solution/zi-di-xiang-shang-he-zi-ding-xiang-xia-by-powcai-3/
+
+```
+(一)、当word1[i]==word2[j]时,由于遍历到了i和j,说明word1的0~i-1和word2的0~j-1的匹配结果已经生成,
+由于当前两个字符相同,因此无需做任何操作,dp[i][j]=dp[i-1][j-1]
+(二)、当word1[i]!=word2[j]时,可以进行的操作有3个:
+      ① 替换操作:可能word1的0~i-1位置与word2的0~j-1位置的字符都相同,
+           只是当前位置的字符不匹配,进行替换操作后两者变得相同,
+           所以此时dp[i][j]=dp[i-1][j-1]+1(这个加1代表执行替换操作)
+      ②删除操作:若此时word1的0~i-1位置与word2的0~j位置已经匹配了,
+         此时多出了word1的i位置字符,应把它删除掉,才能使此时word1的0~i(这个i是执行了删除操作后新的i)
+         和word2的0~j位置匹配,因此此时dp[i][j]=dp[i-1][j]+1(这个加1代表执行删除操作)
+      ③插入操作:若此时word1的0~i位置只是和word2的0~j-1位置匹配,
+          此时只需要在原来的i位置后面插入一个和word2的j位置相同的字符使得
+          此时的word1的0~i(这个i是执行了插入操作后新的i)和word2的0~j匹配得上,
+          所以此时dp[i][j]=dp[i][j-1]+1(这个加1代表执行插入操作)
+      ④由于题目所要求的是要最少的操作数:所以当word1[i] != word2[j] 时,
+          需要在这三个操作中选取一个最小的值赋格当前的dp[i][j]
+(三)总结:状态方程为:
+if(word1[i] == word2[j]):
+      dp[i][j] = dp[i-1][j-1]
+else:
+       min(dp[i-1][j-1],dp[i-1][j],dp[i][j-1])+1
+```
+
+**代码**
 ```go
+func minDistance(word1 string, word2 string) int {
+	// dp[i][j] word1前i个字符转换成word2前j个字符所使用的的最少步数（已达成时）
+	n := len(word1)
+	m := len(word2)
+	dp := make([][]int, n + 1)
+	for i := range dp {
+		dp[i] = make([]int, m + 1)
+	}
+
+	for i := 0; i <= n; i++ {
+		dp[i][0] = i // abc->[]
+	}
+	for j := 0; j <= m; j++ {
+		dp[0][j] = j // []->abc
+	}
+	for i := 1; i <= n; i++ {
+		for j := 1; j <= m; j++ {
+			// i = 1 取word的第1个字符，即word[0] = word[i - 1]
+			if word1[i - 1] == word2[j - 1] {
+				// 第 i 个 == 第 j 个时，dp[i - 1][j - 1]无需操作
+				dp[i][j] = dp[i - 1][j - 1]
+			} else {
+				// 第 i 个 != 第 j 个时
+				insert := dp[i][j - 1] + 1 // 0 ~ i 和 0 ~ j-1 已经相同，要在i后面插入 j 的字符。比如 ab -> abc
+				delete := dp[i - 1][j] + 1 // 0 ~ i-1 和 j 已经相同，多余的i位置删掉。比如 abcd -> abc
+				replace := dp[i - 1][j - 1] + 1 // 前面相同，替换第i个或者替换第j个即可。比如 abcd -> abce
+				dp[i][j] = min(insert, min(delete, replace))
+			}
+		}
+	}
+	return dp[n][m]
+}
+
+func min(a,b int) int {
+	if a < b {return a}
+	return b
+}
 ```
 
 ### 背包问题
@@ -564,9 +628,52 @@ func max(a,b int) int {
 - [分割等和子集（Medium）](https://leetcode-cn.com/problems/partition-equal-subset-sum/)
 
 ```go
+func canPartition(nums []int) bool {
+	// 0/1背包
+	// int数组，sum是奇数肯定不行；
+	// sum是偶数的话，如果在数据范围内能够达到sum/2，那剩下的肯定也是sum/2
+	n := len(nums)
+	new_nums := make([]int, n + 1)
+	for i := 1; i <= n; i++ { // 挪一位方便计算
+		new_nums[i] = nums[i - 1]
+	}
+	sum := 0
+	for i := 1; i <= n; i++ {
+		sum += new_nums[i]
+	}
+	// 奇数不可达
+	if sum % 2 == 1 { return false }
+	sum = sum >> 1
+	f := make([]bool, sum+1)
+	f[0] = true // 0体积true
+	// 先循环nums(物品)
+	// 再循环sum(体积)
+	for i := 1; i <= n; i++ {
+		for j := sum; j - new_nums[i] >= 0; j-- {
+			f[j] = f[j] || f[j - new_nums[i]]
+		}
+	}
+	return f[sum]
+}
 ```
 
 - [零钱兑换 II （Medium）](https://leetcode-cn.com/problems/coin-change-2/)
 
 ```go
+func change(amount int, coins []int) int {
+	// 完全背包模型 + 计数
+	f := make([]int, amount + 1) // 0 ~ amount 的方案数
+	for i := range f {
+		f[i] = 0 // 初始为0种方案	
+	}
+	f[0] = 1 // 什么都不给也是一种方案
+	// 先循环coins(物品)
+	// 再循环amount(体积)
+	for i := 0; i < len(coins); i++ {
+		for j := coins[i]; j <= amount; j++ { // 正序
+			f[j] = f[j] + f[j - coins[i]]
+		}
+	}
+	return f[amount]
+}
 ```
