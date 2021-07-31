@@ -375,7 +375,7 @@ func max(a,b int) int {
 
 ```go
 func maxProfit(prices []int, fee int) int {
-    // 注意题目没有限制买入卖出的次数，套用买卖股票2的模版即可，买入时减去fee
+    // 注意题目不限制交易次数，套用买卖股票2的模版即可，买入时减去fee
 	n := len(prices)
 	if n == 0 { return 0 }
 
@@ -406,6 +406,64 @@ func max(a,b int) int {
 - [最佳买卖股票时机含冷冻期（Medium）](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-with-cooldown/)
 
 ```go
+func maxProfit(prices []int) int {
+    // 注意题目不限制交易次数，买入前必须卖掉之前的股票
+	// 与股票三、四对比，同样是三个状态，但是决策上要根据冷冻期进行调整
+    n := len(prices)
+    if n == 0 { return 0 }
+    // 加一位，方便后续计算 i-1
+    new_prices := make([]int, n + 1)
+    new_prices[0] = 0
+    for i := 1; i <= n; i++ {
+        new_prices[i] = prices[i-1]
+    }
+
+    // 定义dp[i][j][k]
+    dp := make([][][]int, n + 1)
+    for i := range dp {
+        dp[i] = make([][]int, 2)
+        for j := range dp[i] {
+            dp[i][j] = make([]int, 2)
+            for k := range dp[i][j] {
+                dp[i][j][k] = -1000000000 // 负无穷
+            }
+        }
+    }
+
+    dp[0][0][0] = 0 // 边界是0，其他不合法或者影响决策的初始为负无穷
+    for i := 1; i <= n; i++ { // 第几天
+        for j := 0; j <= 1; j++ { // 是否持有
+            for l := 0; l <= 1; l++ { // 冷冻期
+				if j == 0 && l == 0 {
+					// 当前没有股票同时没有冷冻期 = 前一天不操作或者前一天没有股票但处于冷冻期（前一天持有股票不可能处于冷冻期，不考虑）
+					dp[i][0][0] = max(dp[i-1][0][0], dp[i-1][0][1])
+				}
+				if j == 1 && l == 0 {
+					// 当前持有股票同时没有冷冻期 = 前一天不操作或者前一天没有股票时，买入股票，转移到当前状态。
+					dp[i][1][0] = max(dp[i-1][1][0], dp[i-1][0][0] - prices[i-1])
+				}
+				if j == 0 && l == 1 {
+					// 当前处于冷冻期，说明前一天持有股票，并且卖出
+					dp[i][0][1] = dp[i - 1][1][0] + prices[i - 1]
+				}
+				if j == 1 && l == 1 {
+					// dp[i][1][1]; // 当前处于冷冻期，同时持有股票（不可能，不考虑）
+				}
+			}
+		}
+	}
+
+    ans := 0 
+    for k := 0; k <= 1; k++ {
+        ans = max(ans, dp[n][0][k])
+    }
+    return ans
+}
+
+func max(a,b int) int {
+    if a > b {return a}
+    return b
+}
 ```
 
 ### 线性DP问题
@@ -413,11 +471,87 @@ func max(a,b int) int {
 - [打家劫舍（Medium）](https://leetcode-cn.com/problems/house-robber/)
 
 ```go
+func rob(nums []int) int {
+
+	n := len(nums)
+	new_nums := make([]int, n + 1)
+	new_nums[0] = 0
+	for i := range nums {
+		new_nums[i+1] = nums[i]
+	}
+
+	dp := make([][2]int, n + 1)
+	for i := range dp {
+		dp[i] = [2]int{0, 0}
+	}
+
+	// dp[i][j] j 表示第i天是否偷盗
+	dp[0][0] = 0
+	dp[0][1] = math.MinInt32  // -2147483648 // 一般写-1e9 即-1000000000
+	for i := 1; i <= n; i++ {
+		// for j := 0; j <= 1; j++ { // j == 1 处于冷冻期
+			// 当前可偷 = 前一天未偷或者前一天偷盗
+			dp[i][0] = max(dp[i - 1][0], dp[i - 1][1])
+			// 当前不可偷 = 前一天未偷今天偷盗，转移状态到当前
+			dp[i][1] = dp[i-1][0] + new_nums[i]
+		// }
+	}
+	return max(dp[n][0], dp[n][1])
+}
+
+func max(a,b int) int {
+	if a > b { return a }
+	return b
+}
 ```
 
 - [打家劫舍 II- 环形 DP （Medium）](https://leetcode-cn.com/problems/house-robber-ii/)
 
 ```go
+func rob(nums []int) int {
+	// 解题思路：环形DP
+	// 对比打家劫舍1，第一间屋子可偷可不偷，搜两遍比较大小
+	n := len(nums)
+	if n == 1 { return nums[0] }
+
+	new_nums := make([]int, n + 1)
+	new_nums[0] = 0 // 前置0方便计算
+	for i := range nums {
+		new_nums[i+1] = nums[i]
+	}
+
+	dp := make([][2]int, n + 1)
+	for i := range dp {
+		dp[i] = [2]int{0, 0}
+	}
+
+	// dp[i][j] j 表示第i天是否偷了
+	// 第一种情况：不偷1可偷n
+	dp[1][0] = 0 
+	dp[1][1] = math.MinInt32  // 第一间偷了没用，不合法（不可达状态）
+	for i := 2; i <= n; i++ {
+		// 当前可偷 = 前一天未偷或者前一天偷盗
+		dp[i][0] = max(dp[i - 1][0], dp[i - 1][1])
+		// 当前不可偷 = 前一天未偷今天偷盗，转移状态到当前
+		dp[i][1] = dp[i-1][0] + new_nums[i]
+	}
+	ans := max(dp[n][0], dp[n][1]) // 最后一间可偷可不偷
+	// 第二种情况：不偷n可偷1
+	dp[1][0] = 0 
+	dp[1][1] = new_nums[1]  // 偷第一间的收益，合法（可达状态）
+	for i := 2; i <= n; i++ {
+		// 当前可偷 = 前一天未偷或者前一天偷盗
+		dp[i][0] = max(dp[i - 1][0], dp[i - 1][1])
+		// 当前不可偷 = 前一天未偷今天偷盗，转移状态到当前
+		dp[i][1] = dp[i-1][0] + new_nums[i]
+	}
+	return max(ans, dp[n][0])
+}
+
+func max(a,b int) int {
+	if a > b { return a }
+	return b
+}
 ```
 
 - [编辑距离（重点题）（Hard）](https://leetcode-cn.com/problems/edit-distance/)
