@@ -138,7 +138,20 @@ func jump(nums []int) int {
 }
 
 // DP
-
+// 参考https://leetcode-cn.com/problems/jump-game-ii/solution/xiang-jie-dp-tan-xin-shuang-zhi-zhen-jie-roh4/
+func jump(nums []int) int {
+    // f[i] 为到达第 i 个位置所需要的最少步数
+    // 当我们要求某一个 f[i] 的时候，我们需要找到最早能够经过一步到达 i 点的 j 点
+    // 即有状态转移方程：f[i] = f[j] + 1
+    n := len(nums)
+    f := make([]int, n)
+    j := 0
+    for i := 1; i < n; i++ {
+        for j + nums[j] < i { j++ }
+        f[i] = f[j] + 1
+    }
+    return f[n - 1]
+}
 ```
 
 ## 动态规划（一）
