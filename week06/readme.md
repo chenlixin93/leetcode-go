@@ -13,11 +13,48 @@
 - [爬楼梯（Easy）](https://leetcode-cn.com/problems/climbing-stairs/description/)
 
 ```go
+func climbStairs(n int) int {
+
+    if n <= 2 {
+        return n
+    }
+
+    f1 := 1
+    f2 := 2
+    f3 := 3
+    for i := 3; i <= n; i++ {
+        f3 = f2 + f1
+        f1 = f2
+        f2 = f3
+        // 当n==4时，f4 = f3 + f2，所以提前把f3、f2填入f2、f1
+    }
+    return f3
+}
 ```
 
 - [三角形最小路径和（Medium）](https://leetcode-cn.com/problems/triangle/description/)
 
 ```go
+func minimumTotal(triangle [][]int) int {
+    n := len(triangle)
+    m := len(triangle[n-1]) // 取最后一行的长度
+    dp := make([][]int, n+1)
+    for i := range dp {
+        dp[i] = make([]int, m+1)
+    }
+    // 自底向上
+    for i := n-1; i >= 0; i-- {
+        for j := 0; j <= i; j++ {
+            dp[i][j] = min(dp[i+1][j], dp[i+1][j+1]) + triangle[i][j]
+        }
+    }
+    return dp[0][0]
+}
+
+func min(a,b int) int {
+    if a < b {return a}
+    return b
+}
 ```
 
 - [最长递增子序列的个数（Medium）](https://leetcode-cn.com/problems/number-of-longest-increasing-subsequence/)
@@ -28,15 +65,80 @@
 - [完全平方数（Medium）](https://leetcode-cn.com/problems/perfect-squares/)
 
 ```go
+func numSquares(n int) int {
+    // 完全平方数就是物品（可以无限件使用），凑个正整数n就是背包，问凑满这个背包最少有多少物品？
+    // dp[i]：和为i的完全平方数的最少数量为dp[i]
+    // dp[i] 可以由dp[i - j * j]推出， dp[i - j * j] + 1 便可以凑成dp[i]
+    f := make([]int, n + 1)
+    for i := range f {
+        f[i] = 1000000000
+    }
+    f[0] = 0
+    for i := 0; i <= n; i++ { // 循环体积(背包)
+        for j := 1; j * j <= i; j++ { // 循环物品
+            f[i] = min(f[i], f[i - j * j] + 1)
+        }
+    }
+    // 也可以先循环物品，再循环背包
+    return f[n]
+}
+
+func min(a,b int) int {
+    if a < b { return a }
+    return b
+}
 ```
 
 - [跳跃游戏（Medium）](https://leetcode-cn.com/problems/jump-game/)
 
 ```go
+func canJump(nums []int) bool {
+    max_i := 0 // 能到达的最远距离
+    idx := 0 // 记录最后的下标
+    for i := range nums {
+        // 如果当前下标 + 数字 > 最远下标，则更新最远下标
+        if max_i >= i && i + nums[i] > max_i {
+            max_i = i + nums[i]
+        }
+        idx = i
+    }
+    return max_i >= idx
+}
 ```
 - [跳跃游戏 II （Medium）](https://leetcode-cn.com/problems/jump-game-ii/)
 
 ```go
+// 贪心
+func jump(nums []int) int {
+    // 决策包容性：同样是跳1步，从 a 跳到 “能跳得更远位置c”的 b，
+    // 未来的可达集合包含了跳到其他b的可达集合，所以这个局部最优决策是正确的
+    now := 0
+    ans := 0
+    right := 0
+    //next := 0
+    for now < len(nums) - 1 {
+        if nums[now] == 0 { return -1 }
+
+        right = now + nums[now]
+        if right >= len(nums) - 1 { // 到达最后
+            return ans + 1
+        }
+        // 从now出发可以到[now+1, right]
+        next := now + 1
+        for i := now + 2; i <= right; i++ { // 搜索[now+1, right]之间能跳到最远c的某个b点
+            next_right := i + nums[i]
+            if next_right > (next + nums[next]) {
+                next = i
+            }
+        }
+        now = next
+        ans++
+    }
+    return ans
+}
+
+// DP
+
 ```
 
 ## 动态规划（一）
