@@ -72,6 +72,48 @@ for (int i = 2; i <= n; i++) {
 - [满足不等式的最大值（Hard）](https://leetcode-cn.com/problems/max-value-of-equation/)
 
 ```go
+func findMaxValueOfEquation(points [][]int, k int) int {
+    // 结合二元组不等式的推导优化
+    // 还是设j < i,多了 x[i] - x[j] < k 的条件
+    // 也就是j和i离得不能太远
+    // 当i增大时，j的取值范围上下界同时增大，要维护y[j] - x[j]的max
+
+    // 本质是，求滑动窗口最大值
+    ans := -1000000000
+    var q Deque
+    for i := 0; i < len(points); i++ {
+        // 求上界j <= i-1,下界x[j] >= x[i] - k
+        // 在这个范围中 y[j]-x[j]的最大值
+        // 考虑两个选项 j1 < j2
+        // 写出j1 比 j2 优的条件
+        // y[j1] - x[j1] > y[j2] - x[j2]
+        // 1. 队头合法性
+        // x[j]: points[q.Front()][0]
+        for q.Len() != 0 && points[q.Front().(int)][0] < points[i][0] - k {
+            q.PopFront()
+        }
+        // 2. 取队头为最优解
+        // y[i]: points[i][1]
+        // x[i]: points[i][0]
+        // y[i] + x[i] + max{y[j] - x[j]}
+        if q.Len() > 0 {
+            ans = max(ans, points[i][1] + points[i][0] + points[q.Front().(int)][1] - points[q.Front().(int)][0])
+        }
+        // 3. 维护队列单调性，队尾插入新选项i
+        for q.Len() > 0 && points[q.Back().(int)][1] - points[q.Back().(int)][0] <= points[i][1] - points[i][0] {
+            q.PopBack()
+        }
+        q.PushBack(i)
+    }
+    return ans
+}
+
+func max(a,b int) int {
+    if a > b {return a}
+    return b
+}
+
+// 引入deque实现 https://github.com/gammazero/deque/blob/master/deque.go
 ```
 
 - [环形子数组的最大和（Medium）](https://leetcode-cn.com/problems/maximum-sum-circular-subarray/)
