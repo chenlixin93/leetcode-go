@@ -124,9 +124,57 @@ func max(a,b int) int {
 
 ## 区间动态规划
 
+- 引入
+
+```go
+// 区间动态规划的子问题是基于一个区间的
+// 区间长度作为DP的阶段，区间端点作为DP的状态
+// 在计算区间长度为len的子问题是，要先计算好所有长度<len的子问题
+```
+
 - [戳气球（Hard）](https://leetcode-cn.com/problems/burst-balloons/)
 
 ```go
+// 思路一：先戳哪个气球？
+// 戳完p以后，子问题[l, p-1]和[p+1, r]两端
+// 相邻的气球发生了变化！
+// 它们和[l, r]不再是同类子问题！
+
+// 思路二：最后一个戳的是哪个气球？
+// 先戳完[l, p-1]和[p+1, r],最后戳p
+// 子问题两端相邻的气球不变，只是区间点是变化信息
+// 满足同类子问题！
+func maxCoins(nums []int) int {
+    // f[l, r]表示戳破区间l～r之间的所有气球，所获硬币的最大数量
+    // 决策：最后一个戳的是p
+    // f[l,r] = max(f[l, p-1] + f[p+1, r] + nums[p]*nums[l-1]*nums[r+1])
+    // 初值，当l>r时，f[l][r] = 0(不合法)
+    // 目标：f[1,n]
+    n := len(nums)
+    nums = append(append([]int{1}, nums...), 1) // 前后插入1、1
+    f := make([][]int, n + 2)
+    for i := range f {
+        f[i] = make([]int, n + 2)
+    }
+    // 区间DP
+    // 先枚举区间长度
+    for len := 1; len <= n; len++ {
+        // 在长度范围内
+        for l := 1; l <= n - len + 1; l++ {
+            r := l + len - 1 // 闭区间 len = r - l + 1
+            // 搜索左端点到右端点的所有情况
+            for p := l; p <= r; p++ {
+                f[l][r] = max(f[l][r], f[l][p-1] + f[p+1][r] + nums[l-1] * nums[p] * nums[r+1])
+            }
+        }
+    }
+    return f[1][n]
+}
+
+func max(a,b int) int {
+    if a > b {return a}
+    return b
+}
 ```
 
 - [合并石头的最低成本（Hard](https://leetcode-cn.com/problems/minimum-cost-to-merge-stones/)
