@@ -100,6 +100,7 @@ func findMaxValueOfEquation(points [][]int, k int) int {
             ans = max(ans, points[i][1] + points[i][0] + points[q.Front().(int)][1] - points[q.Front().(int)][0])
         }
         // 3. 维护队列单调性，队尾插入新选项i
+        // 【核心】j1 < j2 , 而y[j1] - x[j1] > y[j2] - x[j2]。即队尾比下一个进来的优，就可以保证单调性。也能认为当前队头是最优解。
         for q.Len() > 0 && points[q.Back().(int)][1] - points[q.Back().(int)][0] <= points[i][1] - points[i][0] {
             q.PopBack()
         }
