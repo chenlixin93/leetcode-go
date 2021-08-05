@@ -180,6 +180,76 @@ func max(a,b int) int {
 - [合并石头的最低成本（Hard](https://leetcode-cn.com/problems/minimum-cost-to-merge-stones/)
 
 ```go
+// 思路：
+// f[l,r] 表示l～r合成一堆的最低成本？
+// 不行，l~r不一定要合成一堆，可能会合成若干堆，然后跟其他部分一起凑齐k堆，再合成一堆
+// 如何表示“l～r合成若干堆”这个子问题？信息不够，往状态里加
+
+// f[l,r,i]表示把l～r合并成i堆的最低成本
+// 决策一：恰好凑成k堆，合成一堆
+// f[l,r,1] = f[l,r,k] + sum[l,r](sum[r]-sum[l-1])
+// 决策二：分成两个子问题，l～p合成 j 堆，p+1～r合成 i-j 堆，一共 i 堆
+// f[l,r,i] = min(f[l][p][j], f[p+1][r][i-j]) 其中 i > 1
+// 时间复杂度n^3*k^2
+
+// 决策二可以优化，不需要枚举j，考虑第一堆是哪一段就行了
+// f[l,r,i] = min{f[l,p,1] + f[p+1,r,i-1]} 其中 i > 1
+// 时间复杂度n^3*k
+```
+
+```go
+func mergeStones(stones []int, k int) int {
+    n := len(stones)
+    sum := make([]int, n)
+    sum[0] = stones[0]
+    // 计算区间和
+    for i := 1; i < n; i++ {
+        // 0 ~ i 的和
+        sum[i] = sum[i - 1] + stones[i]
+    }
+
+    f := make([][][]int, n+1)
+    for i := range f {
+        f[i] = make([][]int, n+1)
+        for j := range f[i] {
+            f[i][j] = make([]int, k+1)
+            for l := range f[i][j] {
+                f[i][j][l] = 1e9 // 初始为极大值，min时代表不合法的情况
+            }
+        }
+    }
+    for i := 0; i < n; i++ {
+        f[i][i][1] = 0 //  同一堆合成1堆成本为0
+    }
+    cur_sum := 0
+    // 枚举区间长度
+    for len := 2; len <= n; len++ {
+        // 枚举左端点
+        for l := 0; l <= n - len; l++ {
+            // 计算右端点
+            r := l + len - 1
+            // 先计算合成 i > 1堆的最优解，最终推导合成i=1堆的最优解
+            for i := 2; i <= k; i++ {
+                for p := l; p < r; p++ {
+                    f[l][r][i] = min(f[l][r][i], f[l][p][1] + f[p+1][r][i-1])
+                }
+            }
+            if l > 0 {
+                cur_sum = sum[r] - sum[l-1]
+            } else {
+                cur_sum = sum[r] - 0
+            }
+            f[l][r][1] = min(f[l][r][1], f[l][r][k] + cur_sum)
+        }
+    } 
+    if f[0][n-1][1] >= 1e9 {return -1}
+    return f[0][n-1][1]
+}
+
+func min(a,b int) int {
+    if a < b {return a}
+    return b
+}
 ```
 
 ## 树形动态规划
