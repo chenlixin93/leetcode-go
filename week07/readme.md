@@ -195,9 +195,6 @@ func max(a,b int) int {
 // 决策二可以优化，不需要枚举j，考虑第一堆是哪一段就行了
 // f[l,r,i] = min{f[l,p,1] + f[p+1,r,i-1]} 其中 i > 1
 // 时间复杂度n^3*k
-```
-
-```go
 func mergeStones(stones []int, k int) int {
     n := len(stones)
     sum := make([]int, n)
