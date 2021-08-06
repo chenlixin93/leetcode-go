@@ -254,9 +254,59 @@ func min(a,b int) int {
 
 ## 树形动态规划
 
+- 引入
+
+```go
+// 树形DP与线性DP没有本质区别
+// 其实只是套在深度优先遍历里的动态规划（在DFS的过程中实现DP）
+// 子问题就是一棵子树，状态一般表示为“以x为根的子树”，决策是“x的子结点”
+
+// 复杂的题目可以在此基础上增加更多与题目相关的状态、决策
+```
+
 - [打家劫舍 III （Medium）](https://leetcode-cn.com/problems/house-robber-iii/)
 
 ```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func rob(root *TreeNode) int {
+    dp := make(map[*TreeNode][]int)
+    return dfs(root, dp)
+}
+
+// 定义
+// f[x,0]表示以x为根的子树，在不打劫x的情况下，能够盗取的最高金额
+// f[x,1]表示以x为根的子树，在打劫x的情况下，能够盗取的最高金额
+// 决策
+// f[x,0] = max(f[y,0],f[y,1]) // 打劫或者不打劫子树能够获得的最优解
+// f[x,1] = val(x) + max(f[y,0]) // 打劫x同时不打劫子树能够获得的最优解
+// 目标 max(f[root,0],f[root,1])
+func dfs(root *TreeNode, dp map[*TreeNode][]int) int {
+    if root == nil {return 0}
+    // 初始化
+    dp[root] = []int{0, root.Val}
+    // 子树不为空的，要累加其结果
+    if root.Left != nil {
+        dp[root][0] = dp[root][0] + dfs(root.Left, dp)
+        dp[root][1] = dp[root][1] + dp[root.Left][0]
+    }
+    if root.Right != nil {
+        dp[root][0] = dp[root][0] + dfs(root.Right, dp)
+        dp[root][1] = dp[root][1] + dp[root.Right][0]
+    }
+    return max(dp[root][0], dp[root][1])
+}
+
+func max(a,b int) int {
+    if a > b {return a}
+    return b
+}
 ```
 
 ## 字典树
