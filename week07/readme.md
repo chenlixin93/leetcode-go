@@ -510,7 +510,10 @@ func findWords(board [][]byte, words []string) (ans []string) {
             ans = append(ans, curr.word)
             curr.word = "" // 优化
         }
-        // 如果子树为空，可以直接删掉，怎么写？
+        // 如果子树为空，可以直接删掉，怎么写？ // 效率从272ms提升到20ms
+        if len(curr.child) == 0 { // map为空
+            delete(fa.child, ch) // 删除这条路径
+        }
         for k := 0; k < 4; k++ {
             nx := x + dx[k]
             ny := y + dy[k]
