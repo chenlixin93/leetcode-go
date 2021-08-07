@@ -483,7 +483,86 @@ func (this *Trie) solve(word string, insertIfNotExist bool, searchPrefix bool) b
 - [单词搜索 II （Hard）](https://leetcode-cn.com/problems/word-search-ii/)
 
 ```go
+func findWords(board [][]byte, words []string) (ans []string) {
+    // 建立字典树，存单词
+    Trie := Constructor();
+    for _,word := range words {
+        Trie.Insert(word)
+    }
+    m := len(board)
+    n := len(board[0])
+    // 四个方向
+    dx := []int{1, -1, 0, 0}
+    dy := []int{0, 0, 1, -1}
+    // 内置深度优先遍历
+    var dfs func(x,y int, visited [][]bool, curr *node)
+    dfs = func(x,y int, visited [][]bool, curr *node) {
+        // 测试能否访问
+        // fmt.Println(visited)
+        // fmt.Println(root)
+        // fmt.Println(ans)
+        ch := board[x][y]
+        if _, ok := curr.child[ch]; !ok {return} // 不存在位置当前字符
+        // 存在的话
+        fa := curr
+        curr = fa.child[ch] // 进入当前字符这一层
+        if curr.word != "" {
+            ans = append(ans, curr.word)
+            curr.word = "" // 优化
+        }
+        // 如果子树为空，可以直接删掉，怎么写？
+        for k := 0; k < 4; k++ {
+            nx := x + dx[k]
+            ny := y + dy[k]
+            if nx < 0 || nx >= m || ny < 0 || ny >= n {continue}
+            if visited[nx][ny] {continue}
+            visited[nx][ny] = true
+            dfs(nx, ny, visited, curr)
+            visited[nx][ny] = false // 恢复现场
+        }
+    }
+    // 主逻辑
+    for i := 0; i < m; i++ {
+        for j := 0; j < n; j++ {
+            // 搜索新位置重新初始化
+            visited := make([][]bool, m)
+            for l := range visited {
+                visited[l] = make([]bool, n)
+            }
+            visited[i][j] = true
+            dfs(i, j, visited, Trie.root)
+        }
+    }
+    return
+}
 
+// 使用208. 实现 Trie (前缀树)的模版
+type node struct {
+    word  string
+    child map[uint8]*node
+}
+
+type Trie struct {
+    root *node
+}
+
+/** Initialize your data structure here. */
+func Constructor() Trie {
+    return Trie{root : &node{child:make(map[uint8]*node)}}
+}
+
+/** Inserts a word into the trie. */
+func (this *Trie) Insert(word string)  {
+    cur := this.root
+    for i := 0; i < len(word); i++ {
+        c := word[i]
+        if _, ok := cur.child[c]; !ok {
+            cur.child[c] = &node{child:make(map[uint8]*node)}
+        }
+        cur = cur.child[c] // 下一个字符进入下一层
+    }
+    cur.word = word // 走完一个单词，存入单词
+}
 ```
 
 ## 并查集
