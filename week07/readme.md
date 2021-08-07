@@ -670,9 +670,116 @@ func (this *Trie) Insert(word string)  {
 
 ## 并查集
 
+**引入**
+
+```go
+// 基本用途
+// 处理不相交集合（disjoint sets）的合并和查询问题
+// 处理分组问题
+// 维护无序二元组关系
+
+// 基本操作
+// MakeSet(s)
+// 建立一个新的并查集，其中包含s个集合，每个集合里只有一个元素
+// UnionSet(s)
+// 把元素x和元素y所在的集合合并
+// 要求x和y所在的集合不相交，如果相交则无需合并
+// Find(x)
+// 找到元素x所在的集合的代表
+// 该操作也可以用于判断两个元素是否位于同一个集合，只要将它们各自的代表比较一下就可以了
+
+// 内部实现
+// 每个集合是一个树形结构
+// 每个结点只需要保存一个值：它的父结点
+// 最简单的实现就是只用一个int数组fa，fa[x]表示编号为x的结点的父结点
+
+// 路径压缩
+// 并查集本质只关心每个结点所在的集合，不关心该集合对应的树形结构具体是怎样的
+// 而一个结点所在的集合由根结点确定
+// 因此在Find(x) 的同时把x和x的所有祖先直接连到根结点上，下一次就可以一步走到根了
+
+// 高级名词，同时采用路径压缩和按秩合并优化
+```
+
+**模版**
+
+```go
+type DisjointSet struct {
+    fa []int
+}
+
+func Construct(n int) DisjointSet {
+    s := DisjointSet{fa: make([]int, n)}
+    for i := 0; i < n; i++ {
+        s.fa[i] = i
+    }
+    return s
+}
+
+func (s *DisjointSet) Find(x int) int {
+    if s.fa[x] != x {
+        s.fa[x] = s.Find(s.fa[x])
+    }
+    return s.fa[x]
+}
+
+func (s *DisjointSet) Join(x, y) int {
+    x, y = s.Find(x), s.Find(y)
+    if x != y {
+        s.fa[x] = y
+    }
+}
+```
+
 - [省份数量（Medium）](https://leetcode-cn.com/problems/number-of-provinces/)
 
 ```go
+func findCircleNum(isConnected [][]int) int {
+    n := len(isConnected)
+    // 建立并查集
+    s := Construct(n)
+    // 每一条边代表一次合并
+    for i := 0; i < n; i++ {
+        for j := 0; j < n; j++ {
+            if (i != j && isConnected[i][j] == 1) {
+                s.Join(i, j)
+            }
+        }
+    }
+    // 有几颗树？（有几个根）
+    ans := 0
+    for i := 0; i < n; i++ {
+        if s.Find(i) == i { ans++ }
+    }
+    return ans
+}
+// 模版部分
+type DisjointSet struct {
+    fa []int
+}
+
+func Construct(n int) DisjointSet {
+    s := DisjointSet{fa: make([]int, n)}
+    for i := 0; i < n; i++ {
+        s.fa[i] = i
+    }
+    return s
+}
+// 找到根结点,并进行路径压缩
+func (s *DisjointSet) Find(x int) int {
+    if s.fa[x] != x {
+        s.fa[x] = s.Find(s.fa[x])
+    }
+    return s.fa[x]
+}
+
+func (s *DisjointSet) Join(x, y int) {
+    x, y = s.Find(x), s.Find(y)
+    if x != y {
+        s.fa[x] = y
+    }
+}
+
 ```
 
 - [被围绕的区域（Medium）](https://leetcode-cn.com/problems/surrounded-regions/)
