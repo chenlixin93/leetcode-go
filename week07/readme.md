@@ -308,14 +308,182 @@ func max(a,b int) int {
 
 ## 字典树
 
+- 引入
+
+```go
+// 字典树是一种由结点和带有字符的边构成的树形结构。
+// 典型应用就是用于统计和排序大量的字符串（但不仅限于字符串），经常被搜索引擎系统用于文本词频统计。
+// 它的优点是：最大限度地减少无谓的字符串比较，查询效率比哈希表高。
+
+// 基本性质
+// 1. 结点本身不保存完整单词
+// 2. 从根结点到某一结点，路径上经过的字符连接起来，为该结点对应的单词
+// 3. 每个结点出发的所有边代表的字符都不相同。
+// 4. 结点用于存储单词的额外信息（例如词频）
+
+// 内部实现
+// 字符集数组法（简单）
+// 每个结点保存一个长度固定为字符集大小（26）的数组，以字符为下标，保存指向的结点
+// 空间复杂度为 O(结点数*字符集大小)，查询的时间复杂度为 O(单词长度)
+// 适用于较小字符集，或者单词短，分布稠密的字典
+
+// 字符集映射法（优化）
+// 把每个结点上的字符集数组改为一个映射（词频统计：hash map，排序：ordered map）
+// 空间复杂度为O(文本字符总数)，查询的时间复杂度为O(单词长度)，但常数稍大一些
+// 适用性更广
+```
+
+- 核心思想
+
+```go
+// Trie 树的核心思想是空间换时间
+// 无论保存树的结构、字符集数组还是字符集映射，都需要额外的空间
+
+// 利用字符串的公共前缀来降低查询时间的开销以达到提高效率的目的
+// 分组思想--前缀相同的字符串在同一子树中
+```
+
 - [实现 Trie (前缀树) （Medium）](https://leetcode-cn.com/problems/implement-trie-prefix-tree/)
 
 ```go
+// 初版
+type node struct {
+    count int
+    child map[uint8]*node
+}
+
+type Trie struct {
+    root *node
+}
+
+
+/** Initialize your data structure here. */
+func Constructor() Trie {
+    return Trie{root : &node{count:0, child:make(map[uint8]*node)}}
+}
+
+
+/** Inserts a word into the trie. */
+func (this *Trie) Insert(word string)  {
+    cur := this.root
+    for i := 0; i < len(word); i++ {
+        c := word[i]
+        if _, ok := cur.child[c]; !ok {
+            cur.child[c] = &node{child:make(map[uint8]*node)}
+        }
+        cur = cur.child[c] // 下一个字符进入下一层
+    }
+    cur.count++ // 走完一个单词，词频+1
+}
+
+
+/** Returns if the word is in the trie. */
+func (this *Trie) Search(word string) bool {
+    cur := this.root
+    for i := 0; i < len(word); i++ {
+        c := word[i]
+        if _, ok := cur.child[c]; !ok {
+            return false
+        }
+        cur = cur.child[c] // 下一个字符进入下一层
+    }
+    return cur.count > 0 // 词频大于0代表存在
+}
+
+
+/** Returns if there is any word in the trie that starts with the given prefix. */
+func (this *Trie) StartsWith(prefix string) bool {
+    cur := this.root
+    for i := 0; i < len(prefix); i++ {
+        c := prefix[i]
+        if _, ok := cur.child[c]; !ok {
+            return false
+        }
+        cur = cur.child[c] // 下一个字符进入下一层
+    }
+    return true
+}
+
+
+/**
+ * Your Trie object will be instantiated and called as such:
+ * obj := Constructor();
+ * obj.Insert(word);
+ * param_2 := obj.Search(word);
+ * param_3 := obj.StartsWith(prefix);
+ */
+
+// 优化版本
+type node struct {
+    count int
+    child map[uint8]*node
+}
+
+type Trie struct {
+    root *node
+}
+
+
+/** Initialize your data structure here. */
+func Constructor() Trie {
+    return Trie{root : &node{count:0, child:make(map[uint8]*node)}}
+}
+
+
+/** Inserts a word into the trie. */
+func (this *Trie) Insert(word string)  {
+    this.solve(word, true, false)
+}
+
+
+/** Returns if the word is in the trie. */
+func (this *Trie) Search(word string) bool {
+    return this.solve(word, false, false)
+}
+
+
+/** Returns if there is any word in the trie that starts with the given prefix. */
+func (this *Trie) StartsWith(prefix string) bool {
+    return this.solve(prefix, false, true)
+}
+
+func (this *Trie) solve(word string, insertIfNotExist bool, searchPrefix bool) bool {
+    cur := this.root
+    for i := 0; i < len(word); i++ {
+        c := word[i]
+        if _, ok := cur.child[c]; !ok {
+            if insertIfNotExist {
+                cur.child[c] = &node{child:make(map[uint8]*node)}
+            } else {
+                return false
+            }
+            
+        }
+        cur = cur.child[c] // 下一个字符进入下一层
+    }
+    if searchPrefix {
+        return true
+    }
+    if insertIfNotExist {
+        cur.count++
+    }
+    return cur.count > 0
+}
+
+
+/**
+ * Your Trie object will be instantiated and called as such:
+ * obj := Constructor();
+ * obj.Insert(word);
+ * param_2 := obj.Search(word);
+ * param_3 := obj.StartsWith(prefix);
+ */
 ```
 
 - [单词搜索 II （Hard）](https://leetcode-cn.com/problems/word-search-ii/)
 
 ```go
+
 ```
 
 ## 并查集
