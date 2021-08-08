@@ -12,25 +12,32 @@
 
 - [冗余连接（Medium）](https://leetcode-cn.com/problems/redundant-connection/)
 
+
+**并查集**
+
 ```go
 func findRedundantConnection(edges [][]int) []int {
-    parent := make([]int, len(edges)+1)
-    for i := range parent {
-        parent[i] = i
+    // 并查集解法
+    fa := make([]int, len(edges) + 1)
+    for i := range fa {
+        fa[i] = i
     }
-    var find func(int) int
+    // 找到根结点,并进行路径压缩
+    var find func(x int) int
     find = func(x int) int {
-        if parent[x] != x {
-            parent[x] = find(parent[x])
+        if fa[x] != x {
+            fa[x] = find(fa[x])
         }
-        return parent[x]
+        return fa[x]
     }
-    union := func(from, to int) bool {
+    // 有环退出，无环合并from、to
+    var union func(from, to int) bool
+    union = func(from, to int) bool {
         x, y := find(from), find(to)
-        if x == y {
-            return false
+        if x == y { // father[from] ?= father[to]
+            return false // 有环
         }
-        parent[x] = y
+        fa[x] = y // from、to是连通的，所以它们的father也应该在一个集合
         return true
     }
     for _, e := range edges {
@@ -42,81 +49,111 @@ func findRedundantConnection(edges [][]int) []int {
 }
 ```
 
-- [岛屿数量（Medium）](https://leetcode-cn.com/problems/number-of-islands/)
+**DFS做法**
 
 ```go
-type UnionFindSet struct {
-	Parents []int // 每个结点的顶级节点
-	SetCount int // 连通分量的个数
-}
+func findRedundantConnection(input [][]int) (ans []int) {
+    var max func(x,y int) int
+    max = func(x,y int) int {
+        if x > y { return x }
+        return y
+    }
+    n := 0
+    for _,edge := range input { // 出现过最大的点就是n
+        u := edge[0]
+        v := edge[1]
+        n = max(u, n)
+        n = max(v, n)
+    }
 
-func (u *UnionFindSet) Init(grid [][]byte) {
-	row := len(grid)
-	col := len(grid[0])
-	count := row*col
-	u.Parents = make([]int, count)
-	for i := 0; i < row; i++ {
-		for j := 0; j < col; j++ {
-			u.Parents[i*col+j] = i*col+j
-			if grid[i][j] == '1' {
-				u.SetCount++
+    edges := map[int][]int{} // int => []int{}
+    visited := map[int]bool{}
+    for i := 0; i <= n; i++ {
+        edges[i] = []int{}
+        visited[i] = false
+    }
+    hasCycle := false
+    // 【核心】一定是1->2->3->1 才是环
+    var dfs func(x, father int)
+    dfs = func(x, father int) {
+        visited[x] = true
+        for _,y := range edges[x] {
+            if y == father { continue } // 避免1->2->1
+            if visited[y] { 
+                hasCycle = true 
+            } else {
+                dfs(y, x)
+            }
+        }
+    }
+
+    for _,edge := range input {
+        u := edge[0]
+        v := edge[1]
+
+        edges[u] = append(edges[u], v)
+        edges[v] = append(edges[v], u)
+
+        // 每加一条边，检查是否出现环
+        for i := 0; i <= n; i++ {
+            visited[i] = false
+        }
+        dfs(u, -1)
+        if hasCycle {return edge}
+    }
+    return nil
+}
+```
+
+- [岛屿数量（Medium）](https://leetcode-cn.com/problems/number-of-islands/)
+
+**并查集**
+
+```go
+
+```
+
+**DFS做法**
+
+```go
+func numIslands(grid [][]byte) (ans int) {
+	// DFS做法
+	m := len(grid)
+	n := len(grid[0])
+
+	visited := map[int][]bool{}
+	for i := 0; i < m; i++ {
+		visited[i] = make([]bool, n)
+	}
+
+	// 上-下-左-右四个方向
+	dx := []int{-1, 0, 0, 1}
+	dy := []int{0, -1, 1, 0}
+
+	var dfs func(grid [][]byte, x,y int)
+	dfs = func(grid [][]byte, x,y int) {
+		visited[x][y] = true
+		for i := 0; i < 4; i++ {
+			nx := x + dx[i]
+			ny := y + dy[i]
+
+			// 检查边界
+			if nx < 0 || ny < 0 || nx >= m || ny >= n { continue }
+			if grid[nx][ny] == '1' && !visited[nx][ny] {
+				dfs(grid, nx, ny)
 			}
 		}
 	}
-}
-
-func (u *UnionFindSet) Find(node int) int {
-	if u.Parents[node] == node {
-		return node
-	}
-	root := u.Find(u.Parents[node])
-	u.Parents[node] = root
-	return root
-}
-
-func (u *UnionFindSet) Union(node1 int, node2 int) {
-	root1 := u.Find(node1)
-	root2 := u.Find(node2)
-	if root1 == root2 {
-		return
-	}
-	if root1 < root2 {
-		u.Parents[root1] = root2
-	} else {
-		u.Parents[root2] = root1
-	}
-	u.SetCount--
-}
-// 心得：并查集是一种搜索算法（针对聚合的）
-func numIslands(grid [][]byte) int {
-	// 创建并初始化并查集
-	u := &UnionFindSet{}
-	row := len(grid)
-	col := len(grid[0])
-	u.Init(grid)
-	// 根据grid建立相应的并查集，并统计连通分量个数【每连接一次进行减一】
-	for i := 0; i < row; i++ {
-		for j := 0; j < col; j++ {
-			if grid[i][j] == '1' {
-				// 如果周边四个方向也是1就进行union
-				if i - 1 >= 0 && grid[i-1][j] == '1' {
-					u.Union(i*col+j, (i-1)*col+j)
-				}
-				if i + 1 < row && grid[i+1][j] == '1' {
-					u.Union(i*col+j, (i+1)*col+j)
-				}
-				if j - 1 >= 0 && grid[i][j-1] == '1' {
-					u.Union(i*col+j, i*col+(j-1))
-				}
-				if j + 1 < col && grid[i][j+1] == '1' {
-					u.Union(i*col+j, i*col+(j+1))
-				}
-				grid[i][j] = '0'
+    // 【核心】遇到未访问的1计数一次，DFS将连通部分标记为已访问
+	for i := 0; i < m; i++ {
+		for j := 0; j < n; j++ {
+			if grid[i][j] == '1' && !visited[i][j] {
+				dfs(grid, i, j)
+				ans++
 			}
 		}
 	}
-	// 返回结果
-	return u.SetCount
+	return
 }
 ```
 要求：使用并查集而非 DFS/BFS 实现
