@@ -793,4 +793,59 @@ func (s *DisjointSet) Join(x, y int) {
 - [被围绕的区域（Medium）](https://leetcode-cn.com/problems/surrounded-regions/)
 
 ```go
+func solve(board [][]byte)  {
+    // 并查集解法
+    m := len(board)
+    n := len(board[0])
+    fa := make([]int, n * m + 1)
+    // 二维转一维
+    var num func(i, j int) int
+    num = func(i, j int) int {
+        return i * n + j
+    }
+    // Find(x)
+    var get func(x int) int
+    get = func(x int) int {
+        if fa[x] != x {
+            fa[x] = get(fa[x])
+        }
+        return fa[x]
+    }
+    // MakeSet(s)
+    for i := 0; i < m; i++ {
+        for j := 0; j < n; j++ {
+            fa[num(i, j)] = num(i, j)
+        }
+    }
+    fa[n * m] = n * m // 外部大O
+    // 四个方向
+    dx := []int{1, -1, 0, 0}
+    dy := []int{0, 0, 1, -1}
+    for i := 0; i < m; i++ {
+        for j := 0; j < n; j++ {
+            if board[i][j] == 'X' {continue}
+            // 如果是'O'
+            for k := 0; k < 4; k++ {
+                ni := i + dx[k]
+                nj := j + dy[k]
+                if ni < 0 || ni >= m || nj < 0 || nj >= n {
+                    // (ni,nj)是下一个位置，如果不合法，证明当前位置是四条边的'O'，将其与外部大O连通
+                    fa[get(num(i , j))] = get(n * m)
+                } else if board[ni][nj] == 'O' {
+                    // (ni,nj)位置合法&&等于'O'，则是内部的O，只需要与(i,j)连通，处于一个集合
+                    fa[get(num(ni , nj))] = get(num(i, j))
+                }
+            }
+        }
+    }
+    // 最后把内部的'O'标记为'X'，太棒啦！
+    for i := 0; i < m; i++ {
+        for j := 0; j < n; j++ {
+            if board[i][j] == 'O' && get(num(i, j)) != get(n * m) {
+                board[i][j] = 'X'
+            }
+        }
+    }
+    return
+}
 ```
