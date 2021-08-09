@@ -110,7 +110,57 @@ func findRedundantConnection(input [][]int) (ans []int) {
 **并查集**
 
 ```go
+func numIslands(grid [][]byte) int {
+    n, m := len(grid), len(grid[0])
+    size := n * m
+    s := Construct(size) // 建立并查集
+    ocean := 0 // 统计水的个数
+    for i := 0; i < n; i++ {
+        for j := 0; j < m; j++ {
+            if grid[i][j] == '0' {
+                ocean += 1
+            } else {
+                // 对右边和下边为1的区域进行合并
+                if i+1 < n && grid[i+1][j] == '1' {
+                    s.Join(i*m + j, (i+1)*m + j)
+                }
+                if j+1 < m && grid[i][j+1] == '1' {
+                    s.Join(i*m + j, i*m + j+1)
+                }
+            }
+        }
+    }
+    return s.size - ocean // 全局合并完陆地后的总数 - 水域数 = 实际陆地数  
+}
 
+// 模版
+type DisjointSet struct {
+    fa []int
+    size int
+}
+
+func Construct(n int) DisjointSet {
+    s := DisjointSet{fa: make([]int, n),size : n}
+    for i := 0; i < n; i++ {
+        s.fa[i] = i
+    }
+    return s
+}
+
+func (s *DisjointSet) Find(x int) int {
+    if s.fa[x] != x {
+        s.fa[x] = s.Find(s.fa[x])
+    }
+    return s.fa[x]
+}
+
+func (s *DisjointSet) Join(x, y int) {
+    x, y = s.Find(x), s.Find(y)
+    if x != y {
+        s.fa[x] = y
+        s.size -= 1 // 【核心】合并完两块陆地，size-1
+    }
+}
 ```
 
 **DFS做法**
@@ -768,7 +818,7 @@ func (s *DisjointSet) Find(x int) int {
     return s.fa[x]
 }
 
-func (s *DisjointSet) Join(x, y) int {
+func (s *DisjointSet) Join(x, y int) {
     x, y = s.Find(x), s.Find(y)
     if x != y {
         s.fa[x] = y
