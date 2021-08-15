@@ -299,7 +299,7 @@ func isPalindrome(s string) bool {
     }
     return true
 }
-// 效率较低把92ms
+// 效率较低 192ms
 ```
 
 - [验证回文字符串 Ⅱ（Easy）（贪心 + 验证）](https://leetcode-cn.com/problems/valid-palindrome-ii/)
