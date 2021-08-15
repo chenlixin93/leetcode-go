@@ -159,6 +159,7 @@ func myAtoi(s string) int {
 
 - 引入
 
+```go
 选用的 Hash 函数：
 
 把字符串看作一个 b 进制数（一个多项式），计算它（在十进制下）对 p 取模的值
@@ -179,7 +180,7 @@ func myAtoi(s string) int {
 Hash值相等时，可以再对比一下两个字符串，避免Hash碰撞问题
 
 c++可以自然溢出，其他语言需要取模。
-
+```
 
 如何快速计算一个子串的hash值？
 
@@ -230,9 +231,7 @@ func strStr(haystack string, needle string) int {
     var tHash int64 = 0 // java long类型，int64
     for i := 1; i <= m; i++ {
         tHash = (tHash * 131 + int64(t[i] - 'a') + 1) % p
-        //fmt.Println(tHash)
     }
-    //fmt.Println(tHash)
     // 模版
     sHash := make([]int64, n + 1)
     sHash[0] = 0
@@ -255,7 +254,7 @@ func strStr(haystack string, needle string) int {
     }
     return -1
 }
-
+// 模板：O(1)得到子串[l..r]的Hash值
 func calcHash(H,p131 []int64, p int64, l,r int) int64 {
     // 求 hello 的子串的hash值
     //  h  e  l l
