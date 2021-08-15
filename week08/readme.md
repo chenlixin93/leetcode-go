@@ -332,6 +332,142 @@ func validPalindromeHelper(s string, l,r int, canDelete bool) bool {
 加入二分 + Rabin-Karp 优化，O(nlogn)
 
 ```go
+// 初版
+func longestPalindrome(s string) string {
+    if len(s) == 0 {return ""}
+    // 枚举中点，向两边扩展，考虑奇偶
+    n := len(s)
+    s = " " + s
+    anslen := 0
+    ansstart := 0
+    // 中心是一个字符的情况，比如aba
+    for center := 1; center <= n; center++ {
+        l := center - 1
+        r := center + 1
+        for l > 0 && r <= n && s[l] == s[r] {
+            l--
+            r++
+        }
+        // l+1 ~ r-1 // 最后l减1、r加1之前是回文串，需要加回去
+        // (r-1) - (l+1) + 1 = r - l - 1 // 实际长度
+        if r - l - 1 > anslen { // 比之前的结果长，则更新
+            anslen = r - l - 1
+            ansstart = l + 1 // 加回来
+        }
+    }
+    // 中心是两个字符（一个空），比如abba
+    for center := 1; center < n; center++ { // n-1,n
+        l := center
+        r := center + 1
+        for l > 0 && r <= n && s[l] == s[r] {
+            l--
+            r++
+        }
+        // l+1 ~ r-1 // 最后l减1、r加1之前是回文串，需要加回去
+        // (r-1) - (l+1) + 1 = r - l - 1 // 实际长度
+        if r - l - 1 > anslen { // 比之前的结果长，则更新
+            anslen = r - l - 1
+            ansstart = l + 1 // 加回来
+        }
+    }
+    return  s[ansstart:ansstart + anslen] // 前闭后开
+}
+```
+
+**二分答案+RKHash**
+
+```go
+func longestPalindrome(s string) string {
+    if len(s) == 0 {return ""}
+    // 枚举中点，向两边扩展，考虑奇偶
+    n := len(s)
+    s = " " + s
+    
+    // RKHash模版
+    var p int64 = 1e9 + 7
+    preH := make([]int64, n+1) // 前缀Hash
+    preH[0] = 0
+    p131 := make([]int64, n+1) // 131次幂
+    p131[0] = 1
+    for i := 1; i <= n; i++ {
+        preH[i] = (preH[i - 1] * 131 + int64(s[i] - 'a') + 1) % p
+        p131[i] = p131[i - 1] * 131 % p
+    }
+    sufH := make([]int64, n+2) // 后缀Hash（反着读就是前缀字符串）
+    sufH[n+1] = 0
+    for i := n; i >= 1; i-- {
+        sufH[i] = (sufH[i + 1] * 131 + int64(s[i] - 'a') + 1) % p
+    }
+
+    anslen := 0
+    ansstart := 0
+    // 中心是一个字符的情况，比如aba
+    for center := 1; center <= n; center++ {
+        // 二分查找，从当前字符串向两边可扩展的最大长度
+        lenL := 0 // 下界
+        lenR := n // 上界
+        l := 0
+        r := 0
+        len := 0
+        for lenL < lenR { // 二分模版部分
+            len = (lenL + lenR + 1) >> 1 // mid
+            l = center - len
+            r = center + len
+            if isPalindrome(s, n, preH, sufH, p131, p, l, r) { // 是回文，可以更长
+                lenL = len
+            } else {
+                lenR = len - 1
+            }
+        }
+        // 两侧最多扩LenL，再加一个中心
+        if lenL * 2 + 1 > anslen {
+            anslen = lenL * 2 + 1
+            ansstart = center - lenL
+        }
+    }
+    // 中心是两个字符（一个空），比如abba
+    for center := 1; center < n; center++ { // n-1,n
+        // 二分查找，从当前字符串向两边可扩展的最大长度
+        lenL := 0 // 下界
+        lenR := n // 上界
+        l := 0
+        r := 0
+        len := 0
+        for lenL < lenR { // 二分模版部分
+            len = (lenL + lenR + 1) >> 1 // mid
+            // 代入abba // 走len=0步，为空串；
+            l = center - len + 1 // l～center
+            r = center + len // center+1～r
+            if isPalindrome(s, n, preH, sufH, p131, p, l, r) { // 是回文，可以更长
+                lenL = len
+            } else {
+                lenR = len - 1
+            }
+        }
+        // 两侧分别是l～center和center+1～r
+        if lenL * 2 > anslen {
+            anslen = lenL * 2
+            ansstart = center - lenL + 1
+        }
+    }
+    return  s[ansstart:ansstart + anslen] // 前闭后开
+}
+// RKHash判定是否回文
+func isPalindrome(s string, n int, preH,sufH,p131 []int64, p int64, l, r int) bool {
+    if l < 1 || r > n { return false }
+    if l > r { return true }
+    return calcPre(preH, p131, p, l, r) == calcSuf(sufH, p131, p, l, r)
+}
+
+// 模板：O(1)得到子串[l..r]的Hash值
+func calcPre(preH,p131 []int64, p int64, l,r int) int64 {
+    return ((preH[r] - preH[l - 1] * p131[r - l + 1]) %p + p) %p
+}
+
+// 模板：O(1)得到子串[l..r]反着读的Hash值
+func calcSuf(sufH,p131 []int64, p int64, l,r int) int64 {
+    return ((sufH[l] - sufH[r + 1] * p131[r - l + 1]) %p + p) %p
+}
 ```
 
 ### 字符串 + 动态规划
