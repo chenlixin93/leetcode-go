@@ -480,4 +480,30 @@ func calcSuf(sufH,p131 []int64, p int64, l,r int) int64 {
 - [不同的子序列（Hard）](https://leetcode-cn.com/problems/distinct-subsequences/)
 
 ```go
+func numDistinct(s string, t string) int {
+    // 定义s前i个字符里，有几个子序列等于t的前几个字符
+    n := len(s)
+    m := len(t)
+    s = " " + s
+    t = " " + t
+    f := make([][]int, n + 1)
+    for i := range f {
+        f[i] = make([]int, m + 1)
+    }
+    for i := 0; i<= n; i++ {
+        f[i][0] = 1 // s前i个字符出现空串的次数是1
+    }
+    // 根据i-1的状态推i的状态
+    for i := 1; i <= n; i++ {
+        for j := 1; j <= m; j++ {
+            f[i][j] = f[i - 1][j] // 不要i这个位置的字符
+            // 要i这个位置的字符
+            if s[i] == t[j] {
+                // 如果字符相等的话，就要加上f[i - 1][j - 1]的次数
+                f[i][j] = f[i][j] + f[i - 1][j - 1]
+            }
+        }
+    }
+    return f[n][m]
+}
 ```
