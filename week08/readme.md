@@ -277,6 +277,29 @@ func calcHash(H,p131 []int64, p int64, l,r int) int64 {
 - [验证回文串（Easy）](https://leetcode-cn.com/problems/valid-palindrome/)
 
 ```go
+func isPalindrome(s string) bool {
+    var t string
+    for _,ch := range s {
+        //fmt.Println(reflect.TypeOf(ch)) // int32
+        //fmt.Println(reflect.TypeOf('0')) // int32
+        // 只考虑字符和数字
+        if (ch >= '0' && ch <= '9') || (ch >= 'A' && ch <= 'Z') || ch >= 'a' && ch <= 'z' {
+            if ch >= 'A' && ch <= 'Z' {
+                ch = ch - 'A' + 'a'
+            }
+            t = t + string(ch)
+        }
+    }
+    l := 0
+    r := len(t) - 1
+    for l < r {
+        if t[l] != t[r] {return false}
+        l++
+        r--
+    }
+    return true
+}
+// 效率较低把92ms
 ```
 
 - [验证回文字符串 Ⅱ（Easy）（贪心 + 验证）](https://leetcode-cn.com/problems/valid-palindrome-ii/)
