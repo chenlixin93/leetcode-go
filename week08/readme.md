@@ -328,11 +328,8 @@ func validPalindromeHelper(s string, l,r int, canDelete bool) bool {
 
 - [最长回文子串（Medium）](https://leetcode-cn.com/problems/longest-palindromic-substring/)
 
-> 中间向两边扩张 O(n2)
-加入二分 + Rabin-Karp 优化，O(nlogn)
-
+**解法1**
 ```go
-// 初版
 func longestPalindrome(s string) string {
     if len(s) == 0 {return ""}
     // 枚举中点，向两边扩展，考虑奇偶
@@ -374,7 +371,10 @@ func longestPalindrome(s string) string {
 }
 ```
 
-**二分答案+RKHash**
+**解法2 二分答案+RKHash**
+
+> 中间向两边扩张 O(n2)
+加入二分 + Rabin-Karp 优化，O(nlogn)
 
 ```go
 func longestPalindrome(s string) string {
