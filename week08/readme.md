@@ -305,6 +305,25 @@ func isPalindrome(s string) bool {
 - [验证回文字符串 Ⅱ（Easy）（贪心 + 验证）](https://leetcode-cn.com/problems/valid-palindrome-ii/)
 
 ```go
+func validPalindrome(s string) bool {
+    return validPalindromeHelper(s, 0, len(s) - 1, true)
+}
+
+func validPalindromeHelper(s string, l,r int, canDelete bool) bool {
+    for l < r {
+        if s[l] == s[r] {
+            l++
+            r--
+        } else {
+            if canDelete { // 能删除，尝试删除一个位置
+                return validPalindromeHelper(s, l+1, r, false) || validPalindromeHelper(s, l, r-1, false)
+            } else {
+                return false
+            }
+        }
+    }
+    return true
+}
 ```
 
 - [最长回文子串（Medium）](https://leetcode-cn.com/problems/longest-palindromic-substring/)
