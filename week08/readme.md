@@ -475,6 +475,38 @@ func calcSuf(sufH,p131 []int64, p int64, l,r int) int64 {
 - [正则表达式匹配（Hard）](https://leetcode-cn.com/problems/regular-expression-matching/)
 
 ```go
+// 待补充注释
+func isMatch(s string, p string) bool {
+    n := len(s)
+    m := len(p)
+    s = " " + s
+    p = " " + p
+    // 定义前i个和前j个是否匹配
+    f := make([][]bool, n + 1)
+    for i := range f {
+        f[i] = make([]bool, m + 1)
+    }
+    f[0][0] = true
+    for i := 2; i<= m && p[i] == '*'; i+=2 {
+        f[0][i] = true // 
+    }
+    for i := 1; i <= n; i++ {
+        for j := 1; j <= m; j++ {
+            if p[j] == '.' { // i 和 j 一定能匹配
+                f[i][j] = f[i - 1][j - 1]
+            } else if p[j] == '*' {
+                f[i][j] = f[i][j - 2] // 不要 _* 配0个
+                if p[j - 1] == '.' || s[i] == p[j - 1] { // 让 _* 的 _ 去配 s[i] ?
+                    f[i][j] = f[i][j] || f[i - 1][j]
+                }
+            } else {
+                // 前i个与前j个匹配，一定是前 i-1 匹配 j-1 同时 i == j
+                f[i][j] = f[i - 1][j - 1] && s[i] == p[j]
+            }
+        }
+    }
+    return f[n][m]
+}
 ```
 
 - [不同的子序列（Hard）](https://leetcode-cn.com/problems/distinct-subsequences/)
