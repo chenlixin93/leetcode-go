@@ -1,3 +1,19 @@
+- [week08](#week08)
+  * [homework](#homework)
+    + [基础问题](#基础问题)
+    + [字符串操作](#字符串操作)
+    + [同构或异位词系列问题](#同构或异位词系列问题)
+    + [字符串与动态规划](#字符串与动态规划)
+  * [Part 1](#part-1)
+    + [最短路](#最短路)
+    + [最小生成树](#最小生成树)
+  * [Part 2](#part-2)
+    + [字符串基础知识](#字符串基础知识)
+    + [Rabin Karp字符串哈希算法](#rabin-karp字符串哈希算法)
+    + [回文串系列](#回文串系列)
+    + [字符串与动态规划 1](#字符串与动态规划-1)
+    + [KMP字符串模版](#kmp字符串模版)
+
 # week08
 
 ## homework
@@ -46,7 +62,7 @@
 ```go
 ```
 
-### 同构 / 异位词系列问题
+### 同构或异位词系列问题
 
 - [同构字符串（Easy）](https://leetcode-cn.com/problems/isomorphic-strings/)
 
@@ -68,7 +84,7 @@
 ```go
 ```
 
-### 字符串 + 动态规划
+### 字符串与动态规划
 
 - [通配符匹配（Hard）](https://leetcode-cn.com/problems/wildcard-matching/)
 
@@ -155,7 +171,7 @@ func myAtoi(s string) int {
 }
 ```
 
-### Rabin-Karp 字符串哈希算法
+### Rabin Karp字符串哈希算法
 
 - 引入
 
@@ -470,7 +486,7 @@ func calcSuf(sufH,p131 []int64, p int64, l,r int) int64 {
 }
 ```
 
-### 字符串 + 动态规划
+### 字符串与动态规划 1
 
 - [正则表达式匹配（Hard）](https://leetcode-cn.com/problems/regular-expression-matching/)
 
