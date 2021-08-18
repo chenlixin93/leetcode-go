@@ -539,3 +539,10 @@ func numDistinct(s string, t string) int {
     return f[n][m]
 }
 ```
+
+### KMP字符串模版
+
+- [实现 strStr() （Easy）](https://leetcode-cn.com/problems/implement-strstr/)
+
+```go
+```
