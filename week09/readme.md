@@ -164,11 +164,123 @@ func solveNQueens(n int) (res [][]string) {
 - [有效的数独（Medium）](https://leetcode-cn.com/problems/valid-sudoku/)
 
 ```go
+func isValidSudoku(board [][]byte) bool {
+	row := make(map[int]map[byte]bool) // 9 行
+	col := make(map[int]map[byte]bool) // 9 列
+	box := make(map[int]map[byte]bool) // 9 个 box
+	for i := 0; i < 9; i++ { // 需要初始化，否则会报 nil map
+		row[i] = map[byte]bool{}
+		col[i] = map[byte]bool{}
+		box[i] = map[byte]bool{}
+	}
+	for i := 0; i < 9; i++ {
+		for j := 0; j < 9; j++ {
+			if string(board[i][j]) != "." {
+				digit := board[i][j]
+				box_id := i/3 * 3 + j/3 // 切割成3*3=9个盒子，再转化成一维数字，编号0~8
+				if row[i][digit] { return false } // 如果当前行已经出现该数字，返回false
+				row[i][digit] = true
+				if col[j][digit] { return false } // 如果当前列已经出现该数字，返回false
+				col[j][digit] = true
+				if box[box_id][digit] { return false } // 如果当前box已经出现该数字，返回false
+				box[box_id][digit] = true
+			}
+		}
+	}
+	return true
+}
 ```
 
 - [解数独（Hard）](https://leetcode-cn.com/problems/sudoku-solver/)
 
 ```go
+/*
+ * @lc app=leetcode.cn id=37 lang=golang
+ *
+ * [37] 解数独
+ */
+
+// @lc code=start
+func solveSudoku(board [][]byte)  {
+	row := make([][10]bool, 9) // [行号][1-9是否可用]
+	col := make([][10]bool, 9) // [列号][1-9是否可用]
+	box := make([][10]bool, 9)
+	for i := 0; i < 9; i++ {
+		for j := 0; j < 10; j++ {
+			row[i][j] = true
+			col[i][j] = true
+			box[i][j] = true
+		}
+	}
+	// 预处理数字的可用情况
+	for i := 0; i < 9; i++ {
+		for j := 0; j < 9; j++ {
+			if board[i][j] != '.' {
+                // 处理为不可用
+				digit := board[i][j] - byte('0')
+				row[i][digit] = false
+				col[j][digit] = false
+				box[i/3*3+j/3][digit] = false
+			}
+		}
+	}
+	dfs(board, row, col, box)
+}
+
+func dfs(board [][]byte, row,col,box [][10]bool) bool {
+	// 找到第一个可填的数
+	location := getLeastPossibleLocation(board, row, col, box)
+	x := location[0]
+	y := location[1]
+	if x == -1 { return true } // 填满了，有解
+	// 尝试填入1-9
+	for digit := 1; digit <= 9; digit++ {
+		boxId := x/3*3+y/3
+        // 都可用时，才进入dfs（剪枝1）
+		if row[x][digit] && col[y][digit] && box[boxId][digit] {
+			// 回溯模板
+			row[x][digit] = false
+			col[y][digit] = false
+			box[boxId][digit] = false
+			board[x][y] = byte('0') + byte(digit)
+			if dfs(board, row, col, box) { return true }
+			board[x][y] = '.'
+			row[x][digit] = true
+			col[y][digit] = true
+			box[boxId][digit] = true
+		}
+	}
+	return false
+}
+
+// 遍历每次找第一个空位置
+
+// VS
+
+// 每次找分支较少的一个空（剪枝2）
+func getLeastPossibleLocation(board [][]byte, row,col,box [][10]bool) [2]int {
+	ansCnt := 10
+	ans := [2]int{-1, -1}
+	for i := 0; i < 9; i++ {
+		for j := 0; j < 9; j++ {
+			// 如果是小数点
+			if board[i][j] == '.' {
+				cnt := 0
+				// 统计当前位置还有几个数可填，取（分支，可能性）最小的坐标
+				for digit := 1; digit <= 9; digit++ {
+					if row[i][digit] && col[j][digit] && box[i/3*3+j/3][digit] {
+						cnt++
+					}
+				}
+				if cnt < ansCnt {
+					ansCnt = cnt
+					ans = [2]int{i, j}
+				}
+			}
+		}
+	}
+	return ans
+}
 ```
 
 ### 迭代加深、折半搜索与双向搜索
