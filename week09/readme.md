@@ -193,6 +193,18 @@ func isValidSudoku(board [][]byte) bool {
 
 - [解数独（Hard）](https://leetcode-cn.com/problems/sudoku-solver/)
 
+> 优先选择“能填的合法数字最少的位置”，而不是第一个位置
+
+如果是人类玩数独，策略一定是先填上“已经能够唯一确定的位置”，然后从那些填的比较满、选项比较少的位置突破
+
+> 快速判断数独有效性
+
+对于每行、每列、每个九宫格，分别用一个9位bool数组保存那些数字可填
+
+对于一个位置，合并它所在的行、列、九宫格的3个bool数组，就可以得到能填的数字
+
+当一个位置填上某个数后，更新对应的行、列、九宫格bool数组，回溯时还原现场
+
 ```go
 /*
  * @lc app=leetcode.cn id=37 lang=golang
