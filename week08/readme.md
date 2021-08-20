@@ -491,7 +491,6 @@ func calcSuf(sufH,p131 []int64, p int64, l,r int) int64 {
 - [正则表达式匹配（Hard）](https://leetcode-cn.com/problems/regular-expression-matching/)
 
 ```go
-// 待补充注释
 func isMatch(s string, p string) bool {
     n := len(s)
     m := len(p)
@@ -503,20 +502,27 @@ func isMatch(s string, p string) bool {
         f[i] = make([]bool, m + 1)
     }
     f[0][0] = true
+    // '*' => 匹配前面的子表达式零次或多次。例如，zo* 能匹配 "z" 以及 "zoo"。* 等价于{0,}
     for i := 2; i<= m && p[i] == '*'; i+=2 {
-        f[0][i] = true // 
+        f[0][i] = true // 原字符串里偶数位为'*'，比如a*a*a*，当*取0时，最终还是能匹配到空串
     }
     for i := 1; i <= n; i++ {
         for j := 1; j <= m; j++ {
-            if p[j] == '.' { // i 和 j 一定能匹配
+            if p[j] == '.' { 
+                // 日常用法：匹配除换行符（\n、\r）之外的任何单个字符
+                // 题目里，j 是 '.' 匹配任意字符，所以s[i]和p[j]一定能匹配，那么f[i][j]取决于f[i-1][j-1]能否匹配
                 f[i][j] = f[i - 1][j - 1]
             } else if p[j] == '*' {
-                f[i][j] = f[i][j - 2] // 不要 _* 配0个
-                if p[j - 1] == '.' || s[i] == p[j - 1] { // 让 _* 的 _ 去配 s[i] ?
+                // j 是 '*' 时，
+                // (1)可以选择匹配0个，即不需要看 p[j-1]p[j] ，那么f[i][j]取决于f[i][j-2]能否匹配
+                f[i][j] = f[i][j - 2]
+                // (2)可以选择匹配1次以上，
+                // 如果是 p[j-1]p[j] 是 .* 或者 s[i] == p[j-1]，那么 s[i] 都能和 p[j-1]p[j] 匹配上，则f[i][j]取决于f[i-1][j] 
+                if p[j - 1] == '.' || s[i] == p[j - 1] {
                     f[i][j] = f[i][j] || f[i - 1][j]
                 }
             } else {
-                // 前i个与前j个匹配，一定是前 i-1 匹配 j-1 同时 i == j
+                // 前i个与前j个能匹配，一定是前i-1个字符匹配前j-1个字符，同时s[i] == p[j]，否则匹配失败
                 f[i][j] = f[i - 1][j - 1] && s[i] == p[j]
             }
         }
