@@ -41,7 +41,6 @@ Python: OrderedDict
 
 ```go
 // 复习：蛮力搜索的三种基本类型
-
 递归形式        时间复杂度      问题举例
 指数型          k^n           子集、大体积背包（每个数选或者不选）
 排列型          n!            全排列、旅行商、N皇后（每个数放之前有多少种摆法）
@@ -300,7 +299,29 @@ func getLeastPossibleLocation(board [][]byte, row,col,box [][10]bool) [2]int {
 - 引入
 
 ```go
+// 普通BFS：利用队列特性实现层序遍历
 
+// 双向BFS：当起点和终点是唯一时。
+适用于层数不太深，但每层分支数量大的问题
+从初态和终态出发各搜索一半状态，产生两棵深度减半的搜索树
+在中间交会，用适当方法合并成最终的答案
+
+// 迭代加深
+对DFS的优化
+适用于搜索树最大深度很大，但答案可能并不太深的问题
+可以防止DFS一开始选错了分支，在不包含答案的深层子树上浪费许多时间
+
+// 折半搜索
+与双向BFS非常类似
+双向BFS：有确定的起点、终点，同时开始，每边搜一步
+折半搜索：用于集合类的问题，把集合分成两半，分别搜出所有方案，再合起来
+
+//例如大体积背包（子集和问题）？
+N个物品选出一些尽量填满体积为M的背包（N个数构成的集合，选出一些，和最接近M）
+M可能很大，O(NM)的动态规划实际上是伪多项式算法
+可以把集合分成两组，每组搜出所有可能的和
+枚举其中一组的和sum，另一组提前拍好序，二分查找M-sum的前驱
+O(2^n) 优化到 O(N*2^(n/2))
 ```
 
 - [单词接龙（Hard）](https://leetcode-cn.com/problems/word-ladder/)
@@ -308,11 +329,114 @@ func getLeastPossibleLocation(board [][]byte, row,col,box [][10]bool) [2]int {
 **解法1: 单向BFS**
 
 ```go
+// slice当作队列
+func ladderLength(beginWord string, endWord string, wordList []string) int {
+    // BFS
+    dist := make(map[string]int)
+    for i := 0; i < len(wordList); i++ {
+        dist[wordList[i]] = 1e9
+    }
+    dist[beginWord] = 1 // 初始序列长度
+
+    var depth int
+    var queue []string // 初始化队列
+    queue = append(queue, beginWord) // 入队第一个元素
+    for len(queue) > 0 {
+        s := queue[0]
+        queue = queue[1:] // 出队第一个元素
+        depth = dist[s] // 当前序列长度
+        for i := 0; i < len(s); i++ {
+            // 当前位置尝试填入a-z的字符
+            for ch := 'a'; ch <= 'z'; ch ++ {
+                backup := s[i]
+                s = s[0:i] + string(ch) + s[i+1:]
+                //fmt.Println(s)
+                if _, ok := dist[s]; ok {
+                    if dist[s] > depth + 1 { // 找到当前字符，序列长度加1
+                        dist[s] = depth + 1
+                        queue = append(queue, s) // 入队列等待转换
+                        if s == endWord { return dist[s] }
+                    }
+                }
+                // 恢复现场
+                s = s[0:i] + string(backup) + s[i+1:]
+            }
+        }
+    }
+    return 0
+
+} // 212ms
+
+// list当作队列
+...
 ```
 
 **解法2: 双向BFS**
 
 ```go
+func ladderLength(beginWord string, endWord string, wordList []string) int {
+    flag := false
+    for i := 0; i < len(wordList); i++ {
+        if endWord == wordList[i] {
+            flag = true
+            break 
+        }
+    }
+    if !flag {return 0}
+
+    dist := make(map[string]int)
+    distEnd := make(map[string]int)
+    for i := 0; i < len(wordList); i++ {
+        dist[wordList[i]] = 1e9
+        distEnd[wordList[i]] = 1e9
+    }
+    dist[beginWord] = 1 // 初始序列长度
+    distEnd[endWord] = 1 // 初始序列长度(从endWord往回走)
+
+    var queue []string
+    var queueEnd []string
+    queue = append(queue, beginWord)
+    queueEnd = append(queueEnd, endWord)
+    var res int
+    for len(queue) > 0 || len(queueEnd) > 0 {
+        res = expand(queue, dist, distEnd)
+        if res != -1 {return res}
+        res = expand(queueEnd, distEnd, dist)
+        if res != -1 {return res}
+    }
+    return 0
+}
+
+// 向前走一步
+func expand(queue []string, dist,distOther map[string]int)  int {
+    var depth int
+    for len(queue) > 0 {
+        s := queue[0]
+        queue = queue[1:] // 前闭
+        depth = dist[s] // 当前序列长度
+        for i := 0; i < len(s); i++ {
+            // 当前位置尝试填入a-z的字符
+            for ch := 'a'; ch <= 'z'; ch ++ {
+                backup := s[i]
+                s = s[0:i] + string(ch) + s[i+1:]
+                if _, ok := dist[s]; ok {
+                    if dist[s] > depth + 1 { // 找到当前字符，序列长度加1
+                        dist[s] = depth + 1
+                        queue = append(queue, s) // 入队列等待转换
+                        if distOther[s] != 1e9 { // 到了对面搜过的一个状态，相遇了
+                            return depth + distOther[s]
+                        }
+                    }
+                }
+                // 恢复现场
+                s = s[0:i] + string(backup) + s[i+1:]
+            }
+        }
+    }
+    return -1
+}
+
+// 测试用例超时，未解决。
 ```
 
 ### 启发式搜索：A* 算法
