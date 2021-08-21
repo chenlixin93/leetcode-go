@@ -374,6 +374,7 @@ func ladderLength(beginWord string, endWord string, wordList []string) int {
 **解法2: 双向BFS**
 
 ```go
+// Go 语言函数引用传递值，解决超时问题
 func ladderLength(beginWord string, endWord string, wordList []string) int {
     flag := false
     for i := 0; i < len(wordList); i++ {
@@ -438,6 +439,30 @@ func expand(queue *[]string, dist *map[string]int, distOther *map[string]int) in
 ```
 
 ### 启发式搜索：A* 算法
+
+- 引入
+
+```go
+// 普通BFS ：按层扩展
+
+// 优先队列BFS：每次从队列中取出当前代价最小的状态进行扩展
+// 局限性：
+一个状态的当前代价最小，只能说明从起始状态到该状态的代价很小，
+而在未来的搜索中，从该状态到目标状态可能会花费很大的代价。
+
+反之亦然，当前代价较大，也许未来代价较小，总代价反而更优。
+优先队列BFS`缺少对未来的预估`
+
+// A*算法 - 估价函数
+A*算法是一种启发式搜索算法
+
+A*算法的关键是设计一个`估价函数`：
+以任意“状态”为输入，计算出从该状态到目标状态所需代价的`估计值`
+在搜索中，维护一个堆（优先队列），优先选择“当前代价+`未来估价`”最小的状态进行扩展
+
+估价函数的设计原则：估值必须比实际更优（估价代价 <= 未来实际代价）
+只要保证以下原则，当目标状态第一次从堆中被取出时，就得到了最优解
+```
 
 - [滑动谜题（Hard）](https://leetcode-cn.com/problems/sliding-puzzle/)
 
