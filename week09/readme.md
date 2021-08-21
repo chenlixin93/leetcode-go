@@ -397,34 +397,34 @@ func ladderLength(beginWord string, endWord string, wordList []string) int {
     var queueEnd []string
     queue = append(queue, beginWord)
     queueEnd = append(queueEnd, endWord)
-    var res int
+    res := -1
     for len(queue) > 0 || len(queueEnd) > 0 {
-        res = expand(queue, dist, distEnd)
+        res = expand(&queue, &dist, &distEnd)
         if res != -1 {return res}
-        res = expand(queueEnd, distEnd, dist)
+        res = expand(&queueEnd, &distEnd, &dist)
         if res != -1 {return res}
     }
     return 0
 }
 
 // 向前走一步
-func expand(queue []string, dist,distOther map[string]int)  int {
+func expand(queue *[]string, dist *map[string]int, distOther *map[string]int) int {
     var depth int
-    for len(queue) > 0 {
-        s := queue[0]
-        queue = queue[1:] // 前闭
-        depth = dist[s] // 当前序列长度
+    for len((*queue)) > 0 {
+        s := (*queue)[0]
+        (*queue) = (*queue)[1:] // 前闭
+        depth = (*dist)[s] // 当前序列长度
         for i := 0; i < len(s); i++ {
             // 当前位置尝试填入a-z的字符
             for ch := 'a'; ch <= 'z'; ch ++ {
                 backup := s[i]
                 s = s[0:i] + string(ch) + s[i+1:]
-                if _, ok := dist[s]; ok {
-                    if dist[s] > depth + 1 { // 找到当前字符，序列长度加1
-                        dist[s] = depth + 1
-                        queue = append(queue, s) // 入队列等待转换
-                        if distOther[s] != 1e9 { // 到了对面搜过的一个状态，相遇了
-                            return depth + distOther[s]
+                if _, ok := (*dist)[s]; ok {
+                    if (*dist)[s] > depth + 1 { // 找到当前字符，序列长度加1
+                        (*dist)[s] = depth + 1
+                        (*queue) = append((*queue), s) // 入队列等待转换
+                        if (*distOther)[s] != 1e9 { // 到了对面搜过的一个状态，相遇了
+                            return depth + (*distOther)[s]
                         }
                     }
                 }
@@ -435,8 +435,6 @@ func expand(queue []string, dist,distOther map[string]int)  int {
     }
     return -1
 }
-
-// 测试用例超时，未解决。
 ```
 
 ### 启发式搜索：A* 算法
