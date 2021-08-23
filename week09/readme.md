@@ -63,7 +63,60 @@ Python: OrderedDict
 
 - 尝试用语言内置的有序集合库，或写一棵平衡树，来解决 [滑动窗口最大值（Hard）](https://leetcode-cn.com/problems/sliding-window-maximum/)
 
+**解法1：优先队列（懒惰删除）**
 ```go
+// 实现优先队列
+import (
+    "sort"
+)
+
+var a []int
+type hp struct{ sort.IntSlice }
+
+func (h hp) Less(i,j int) bool { // 重载
+    return a[h.IntSlice[i]] > a[h.IntSlice[j]]
+}
+
+func (h *hp) Push(v interface{}) {
+    h.IntSlice = append(h.IntSlice, v.(int)) // 整型
+}
+
+func (h *hp) Pop() interface{} {
+    a := h.IntSlice
+    v := a[len(a) - 1]
+    h.IntSlice = a[:len(a) - 1] // 前闭后开
+    return v
+}
+
+func maxSlidingWindow(nums []int, k int) []int {
+    // 思路：懒惰删除
+    // 延迟到 当未删除的值 会影响答案时 再进行
+    a = nums
+    q := &hp{make([]int, k)} // 设定窗口
+    for i := 0; i < k; i++ {
+        q.IntSlice[i] = i
+    }
+    heap.Init(q)
+
+    n := len(nums)
+    ans := make([]int, 1, n - k + 1)
+    ans[0] = nums[q.IntSlice[0]]
+    for i := k; i < n; i++ {
+        heap.Push(q, i)
+        for q.IntSlice[0] <= i - k { // 懒惰删除，检查【堆顶下标】是否在窗口内
+            heap.Pop(q)
+        }
+        ans = append(ans, nums[q.IntSlice[0]])
+    }
+    return ans
+}
+```
+
+**解法2：有序集合**
+
+```go
+// go 实现 treeMap 的效果
+
 ```
 
 - 尝试用语言内置的有序集合库，或写一棵平衡树，来解决 [邻值查找（Medium）AcWing](https://www.acwing.com/problem/content/138/)
