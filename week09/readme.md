@@ -63,7 +63,69 @@ Python: OrderedDict
 
 - 尝试用语言内置的有序集合库，或写一棵平衡树，来解决 [滑动窗口最大值（Hard）](https://leetcode-cn.com/problems/sliding-window-maximum/)
 
-**解法1：优先队列（懒惰删除）**
+**解法1：有序集合【失败】**
+
+```go
+// go 实现 java treeMap 的效果
+// 47 / 61 个通过测试用例 状态：超出时间限制【数据量大过不了。。。】
+func maxSlidingWindow(nums []int, k int) []int {
+    // 值 =》出现的次数
+    m := map[int]int{}
+    // 先设定第一个窗口
+    for i := 0; i < k; i++ {
+        if _, ok := m[nums[i]]; ok {
+            m[nums[i]] += 1
+        } else {
+            m[nums[i]] = 1
+        }
+    }
+    // 每移动一步，每个窗口都需要取出一个最大值，那么结果集的长度=1 + (len - k)
+    n := len(nums)
+    var ans []int
+    m, last_key := sortMapByKey(m)
+    ans = append(ans, last_key)
+    // 窗口开始滑动
+    for i := k; i < n; i++ {
+        // 插入新元素
+        if _, ok := m[nums[i]]; ok {
+            m[nums[i]] += 1
+        } else {
+            m[nums[i]] = 1
+        }
+        // 有元素滑出窗口，那么判断它出现次数，如果当前次数只有1，那么可以将其从窗口删除
+        if out_of_window_count, ok := m[nums[i - k]]; ok {
+            if out_of_window_count == 1 {
+                delete(m, nums[i - k]) // 该元素移出窗口
+            } else {
+                m[nums[i - k]] = out_of_window_count - 1  // 出现次数减一
+            }
+        }
+        // 取出此时窗口的最大值
+        m, last_key = sortMapByKey(m)
+        ans = append(ans, last_key)
+    }
+    return ans
+}
+
+// 返回排好序的map和最大key（窗口最大值）
+func sortMapByKey(m map[int]int) (map[int]int, int) {
+    var keys []int
+    for k := range m {
+        keys = append(keys, k)
+    }
+    sort.Ints(keys) // key排序
+
+    sorted_m := map[int]int{}
+    var last_key int
+    for _, k := range keys {
+        sorted_m[k] = m[k]
+        last_key = k // 记录最后的key，即最大key
+    }
+    return sorted_m, last_key
+}
+```
+
+**解法2：优先队列（懒惰删除）**
 ```go
 // 实现优先队列
 import (
@@ -110,13 +172,6 @@ func maxSlidingWindow(nums []int, k int) []int {
     }
     return ans
 }
-```
-
-**解法2：有序集合**
-
-```go
-// go 实现 treeMap 的效果
-
 ```
 
 - 尝试用语言内置的有序集合库，或写一棵平衡树，来解决 [邻值查找（Medium）AcWing](https://www.acwing.com/problem/content/138/)
