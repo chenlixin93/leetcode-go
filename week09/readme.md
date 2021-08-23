@@ -300,6 +300,21 @@ func getLeastPossibleLocation(board [][]byte, row,col,box [][10]bool) [2]int {
 
 ```go
 // 普通BFS：利用队列特性实现层序遍历
+// slice 当作队列
+var queue []int // 初始化
+queue = append(queue, 1) // 入队一个元素
+if len(queue) > 1 {
+  queue = queue[1:] // 出队一个元素
+}
+
+// queue 当作队列 
+// https://books.studygolang.com/The-Golang-Standard-Library-by-Example/chapter03/03.3.html
+import "container/list"
+queue := list.New()
+queue.PushBack(1)
+if queue.Len() > 1 {
+  queue.Remove(queue.Front())
+}
 
 // 双向BFS：当起点和终点是唯一时。
 适用于层数不太深，但每层分支数量大的问题
