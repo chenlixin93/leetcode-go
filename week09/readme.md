@@ -5,6 +5,54 @@
 - [二进制矩阵中的最短路径（Medium）](https://leetcode-cn.com/problems/shortest-path-in-binary-matrix/)
 
 ```go
+func shortestPathBinaryMatrix(grid [][]int) int {
+	m := len(grid)
+	n := len(grid[0])
+	if grid[0][0] == 1 || grid[m - 1][n - 1] == 1 { // 特判
+		return -1
+	}
+	var q [][2]int
+	visited := make([][]int, m)
+	for i := 0; i < m; i++ {
+		visited[i] = make([]int, n)
+	}
+
+	q = append(q, [2]int{0, 0}) // 起点入队列
+	visited[0][0] = 1 // 标记为已访问
+
+	// 定义八个方向
+	dx := [8]int{-1, 1, 0, 1, 0, -1, 1, -1}
+	dy := [8]int{-1, 1, 1, 0, -1, 0, -1, 1}
+	ans := 0
+
+	// BFS模板
+	for len(q) > 0 {
+		size := len(q) // 当前层的长度
+		for i := 0; i < size; i++ { // 只处理当前层的数据
+			cur := q[0]
+			q = q[1:] // 出队一个元素
+
+			x := cur[0]
+			y := cur[1]
+			if x == m - 1 && y == n - 1 { // 终止条件
+				return ans + 1
+			}
+
+			for j := 0; j < 8; j++ {
+				nx := x + dx[j]
+				ny := y + dy[j]
+				// 检查边界、是否已访问过，不符合题意的情况
+				if nx < 0 || nx >= m || ny < 0 || ny >= n || visited[nx][ny] == 1 || grid[nx][ny] == 1 { 
+					continue
+				}
+				q = append(q, [2]int{nx, ny}) // 入队，下一层进行遍历
+				visited[nx][ny] = 1
+			}
+		}
+		ans++ // 当前层数
+	}
+	return -1
+}
 ```
 
 > 大多数情况下不会自己去实现平衡树或跳表
