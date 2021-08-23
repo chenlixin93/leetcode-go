@@ -466,7 +466,90 @@ A*算法的关键是设计一个`估价函数`：
 
 - [滑动谜题（Hard）](https://leetcode-cn.com/problems/sliding-puzzle/)
 
+**解法1：普通BFS**
+
 ```go
+func slidingPuzzle(board [][]int) int {
+    // BFS解法
+    // 2*3 => 1*6
+    list := make([]int, 6)
+    for i := 0; i < 2; i++ {
+        for j := 0; j < 3; j++ {
+            list = append(list, board[i][j]) // 先转化为一维
+        }
+    }
+    start := zip(list) // 当前状态压缩为一个数
+    target := 123450 // 目标状态
+
+    var q []int // 初始化队列
+    q = append(q, start) // 入队
+    dist := make(map[int]int)
+    dist[start] = 0 // 起点不需要移动
+    for len(q) > 0 {
+        //fmt.Println(q)
+        now := q[0]
+        q = q[1:] // 出队一个元素
+        a := unzip(now) // 解压出一维数组
+        pos := getZeroIndex(a)
+        // 非两个最左侧，可尝试向左走一步
+        if pos != 0 && pos != 3 {   insert(pos, pos - 1, a, now, &q, &dist)    }
+        // 非两个最右侧，可尝试向右走一步
+        if pos != 2 && pos != 5 {   insert(pos, pos + 1, a, now, &q, &dist)    }
+        // 处于第二行，允许往上走一步
+        if pos >= 3 {   insert(pos, pos - 3, a, now, &q, &dist)    }
+        // 处于第一行，允许往下走一步
+        if pos < 3 {    insert(pos, pos + 3, a, now, &q, &dist)    }
+        if _,ok := dist[target]; ok {
+            return dist[target]
+        }
+    }
+    return -1
+}
+// 插入新位置
+func insert(pos int, newPos int, a []int, now int, q *[]int, dist *map[int]int) {
+    //fmt.Println("交换前", a)
+    a[pos], a[newPos] = a[newPos], a[pos]
+    //fmt.Println("交换后", a)
+    next := zip(a)
+    if _,ok := (*dist)[next]; !ok || (*dist)[next] > (*dist)[now] + 1 {
+        // 如果【没找到next】的状态，或者next的已移动次数 > 当前移动次数，则将当前能到达next的移动次数更新并入队
+        (*dist)[next] = (*dist)[now] + 1
+        *q = append(*q, next)
+    }
+    // 恢复现场
+    a[pos], a[newPos] = a[newPos], a[pos]
+}
+
+// [1,2,3,4,5,0] => 123450
+func zip(a []int) int {
+    res := 0
+    for i := 0; i < len(a); i++ {
+        res = res * 10 + (a)[i]
+    }
+    return res
+}
+// 123450 => [1,2,3,4,5,0]
+func unzip(state int) []int {
+    a := make([]int, 6)
+    for i := 5; i >= 0; i-- {
+        a[i] = state % 10
+        state = state / 10 // 整除
+    }
+    return a
+}
+// 找到0的位置
+func getZeroIndex(a []int) int {
+    for i := 0; i < len(a); i++ {
+        if a[i] == 0 {return i}
+    }
+    return -1 //不合法
+}
+```
+
+**解法2：A*算法**
+
+```go
+
 ```
 
 - [八数码（Medium）AcWing](https://www.acwing.com/problem/content/181/)
