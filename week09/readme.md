@@ -63,7 +63,7 @@ Python: OrderedDict
 
 - 尝试用语言内置的有序集合库，或写一棵平衡树，来解决 [滑动窗口最大值（Hard）](https://leetcode-cn.com/problems/sliding-window-maximum/)
 
-**解法1：有序集合【失败】**
+**解法1：手动快排keys【失败】**
 
 ```go
 // go 实现 java treeMap 的效果
@@ -125,7 +125,52 @@ func sortMapByKey(m map[int]int) (map[int]int, int) {
 }
 ```
 
-**解法2：优先队列（懒惰删除）**
+**解法2：使用内置treeMap【通过，效率较低】**
+
+```go
+import "github.com/emirpasic/gods/maps/treemap"
+
+func maxSlidingWindow(nums []int, k int) []int {
+    // 值 =》出现的次数
+    m := treemap.NewWithIntComparator()
+    // 先设定第一个窗口
+    for i := 0; i < k; i++ {
+        if count, ok := m.Get(nums[i]); ok {
+            m.Put(nums[i], count.(int) + 1) // need type assertion
+        } else {
+           m.Put(nums[i], 1) 
+        }
+    }
+    // 每移动一步，每个窗口都需要取出一个最大值，那么结果集的长度=1 + (len - k)
+    n := len(nums)
+    var ans []int
+    last_key, _ := m.Max()
+    ans = append(ans, last_key.(int)) // need type assertion
+    // 窗口开始滑动
+    for i := k; i < n; i++ {
+        // 插入新元素
+        if count, ok := m.Get(nums[i]); ok {
+            m.Put(nums[i], count.(int) + 1) // need type assertion
+        } else {
+           m.Put(nums[i], 1) 
+        }
+        // 有元素滑出窗口，那么判断它出现次数，如果当前次数只有1，那么可以将其从窗口删除
+        if out_of_window_count, ok :=  m.Get(nums[i - k]); ok {
+            if out_of_window_count == 1 {
+                m.Remove(nums[i - k])  // 该元素移出窗口
+            } else {  
+                m.Put(nums[i - k], out_of_window_count.(int) - 1) // 出现次数减一
+            }
+        }
+        // 取出此时窗口的最大值
+       last_key, _ := m.Max()
+        ans = append(ans, last_key.(int))
+    }
+    return ans
+}
+```
+
+**解法3：优先队列（懒惰删除）**
 ```go
 // 实现优先队列
 import (
