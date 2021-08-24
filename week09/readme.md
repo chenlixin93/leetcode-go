@@ -66,7 +66,6 @@ Python: OrderedDict
 **解法1：手动快排keys【失败】**
 
 ```go
-// go 实现 java treeMap 的效果
 // 47 / 61 个通过测试用例 状态：超出时间限制【数据量大过不了。。。】
 func maxSlidingWindow(nums []int, k int) []int {
     // 值 =》出现的次数
@@ -125,7 +124,7 @@ func sortMapByKey(m map[int]int) (map[int]int, int) {
 }
 ```
 
-**解法2：使用内置treeMap【通过，效率较低】**
+**解法2：使用内置treeMap【通过，700+ms】**
 
 ```go
 import "github.com/emirpasic/gods/maps/treemap"
@@ -170,7 +169,7 @@ func maxSlidingWindow(nums []int, k int) []int {
 }
 ```
 
-**解法3：优先队列（懒惰删除）**
+**解法3：优先队列（懒惰删除）【通过，300ms左右】**
 ```go
 // 实现优先队列
 import (
