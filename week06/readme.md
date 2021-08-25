@@ -10,7 +10,7 @@
 
 ## homework
 
-- [爬楼梯（Easy）](https://leetcode-cn.com/problems/climbing-stairs/description/)
+### [爬楼梯（Easy）](https://leetcode-cn.com/problems/climbing-stairs/description/)
 
 ```go
 func climbStairs(n int) int {
@@ -32,7 +32,7 @@ func climbStairs(n int) int {
 }
 ```
 
-- [三角形最小路径和（Medium）](https://leetcode-cn.com/problems/triangle/description/)
+### [三角形最小路径和（Medium）](https://leetcode-cn.com/problems/triangle/description/)
 
 ```go
 func minimumTotal(triangle [][]int) int {
@@ -57,12 +57,12 @@ func min(a,b int) int {
 }
 ```
 
-- [最长递增子序列的个数（Medium）](https://leetcode-cn.com/problems/number-of-longest-increasing-subsequence/)
+### [最长递增子序列的个数（Medium）](https://leetcode-cn.com/problems/number-of-longest-increasing-subsequence/)
 
 ```go
 ```
 
-- [完全平方数（Medium）](https://leetcode-cn.com/problems/perfect-squares/)
+### [完全平方数（Medium）](https://leetcode-cn.com/problems/perfect-squares/)
 
 ```go
 func numSquares(n int) int {
@@ -89,7 +89,7 @@ func min(a,b int) int {
 }
 ```
 
-- [跳跃游戏（Medium）](https://leetcode-cn.com/problems/jump-game/)
+### [跳跃游戏（Medium）](https://leetcode-cn.com/problems/jump-game/)
 
 ```go
 func canJump(nums []int) bool {
@@ -105,7 +105,7 @@ func canJump(nums []int) bool {
     return max_i >= idx
 }
 ```
-- [跳跃游戏 II （Medium）](https://leetcode-cn.com/problems/jump-game-ii/)
+### [跳跃游戏 II （Medium）](https://leetcode-cn.com/problems/jump-game-ii/)
 
 ```go
 // 贪心
@@ -156,7 +156,7 @@ func jump(nums []int) int {
 
 ## 动态规划（一）
 
-- [零钱兑换（Medium）](https://leetcode-cn.com/problems/coin-change/)
+### [零钱兑换（Medium）](https://leetcode-cn.com/problems/coin-change/)
 
 ```go
 func coinChange(coins []int, amount int) int {
@@ -186,7 +186,7 @@ func min(a,b int) int {
 }
 ```
 
-- [不同路径 II （Medium）](https://leetcode-cn.com/problems/unique-paths-ii/)
+### [不同路径 II （Medium）](https://leetcode-cn.com/problems/unique-paths-ii/)
 
 ```go
 func uniquePathsWithObstacles(obstacleGrid [][]int) int {
@@ -216,7 +216,7 @@ func uniquePathsWithObstacles(obstacleGrid [][]int) int {
 }
 ```
 
-- [最长公共子序列（Medium）](https://leetcode-cn.com/problems/longest-common-subsequence/)
+### [最长公共子序列（Medium）](https://leetcode-cn.com/problems/longest-common-subsequence/)
 
 ```go
 func longestCommonSubsequence(text1 string, text2 string) int {
@@ -246,7 +246,7 @@ func max(a,b int) int {
 }
 ```
 
-- [最长递增子序列（Medium）](https://leetcode-cn.com/problems/longest-increasing-subsequence/)
+### [最长递增子序列（Medium）](https://leetcode-cn.com/problems/longest-increasing-subsequence/)
 
 ```go
 func lengthOfLIS(nums []int) int {
@@ -274,7 +274,7 @@ func max(a,b int) int {
 }
 ```
 
-- [最大子序和（Easy）](https://leetcode-cn.com/problems/maximum-subarray/)
+### [最大子序和（Easy）](https://leetcode-cn.com/problems/maximum-subarray/)
 
 ```go
 func maxSubArray(nums []int) int {
@@ -296,7 +296,7 @@ func max(a,b int) int {
 }
 ```
 
-- [乘积最大子数组（Medium）](https://leetcode-cn.com/problems/maximum-product-subarray/)
+### [乘积最大子数组（Medium）](https://leetcode-cn.com/problems/maximum-product-subarray/)
 
 ```go
 ```
@@ -305,7 +305,7 @@ func max(a,b int) int {
 
 ### 买卖股票系列问题
 
-- [买卖股票的最佳时机（Easy）](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock/)
+#### [买卖股票的最佳时机（Easy）](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock/)
 
 ```go
 func maxProfit(prices []int) int {
@@ -338,7 +338,7 @@ func max(a,b int) int {
 }
 ```
 
-- [买卖股票的最佳时机 II （Easy）](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-ii/)
+#### [买卖股票的最佳时机 II （Easy）](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-ii/)
 
 ```go
 func maxProfit(prices []int) int {
@@ -370,7 +370,7 @@ func max(a,b int) int {
 }
 ```
 
-- [买卖股票的最佳时机 III （Easy）](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-iii/)
+#### [买卖股票的最佳时机 III （Easy）](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-iii/)
 
 ```go
 func maxProfit(prices []int) int {
@@ -428,7 +428,7 @@ func max(a,b int) int {
 }
 ```
 
-- [买卖股票的最佳时机 IV （Hard）](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-iv/)
+#### [买卖股票的最佳时机 IV （Hard）](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-iv/)
 
 ```go
 func maxProfit(k int, prices []int) int {
@@ -486,7 +486,7 @@ func max(a,b int) int {
 }
 ```
 
-- [买卖股票的最佳时机含手续费（Medium）](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-with-transaction-fee/)
+#### [买卖股票的最佳时机含手续费（Medium）](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-with-transaction-fee/)
 
 ```go
 func maxProfit(prices []int, fee int) int {
@@ -518,7 +518,7 @@ func max(a,b int) int {
 }
 ```
 
-- [最佳买卖股票时机含冷冻期（Medium）](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-with-cooldown/)
+#### [最佳买卖股票时机含冷冻期（Medium）](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-with-cooldown/)
 
 ```go
 func maxProfit(prices []int) int {
@@ -583,7 +583,7 @@ func max(a,b int) int {
 
 ### 线性DP问题
 
-- [打家劫舍（Medium）](https://leetcode-cn.com/problems/house-robber/)
+#### [打家劫舍（Medium）](https://leetcode-cn.com/problems/house-robber/)
 
 ```go
 func rob(nums []int) int {
@@ -620,7 +620,7 @@ func max(a,b int) int {
 }
 ```
 
-- [打家劫舍 II- 环形 DP （Medium）](https://leetcode-cn.com/problems/house-robber-ii/)
+#### [打家劫舍 II- 环形 DP （Medium）](https://leetcode-cn.com/problems/house-robber-ii/)
 
 ```go
 func rob(nums []int) int {
@@ -669,7 +669,7 @@ func max(a,b int) int {
 }
 ```
 
-- [编辑距离（重点题）（Hard）](https://leetcode-cn.com/problems/edit-distance/)
+#### [编辑距离（重点题）（Hard）](https://leetcode-cn.com/problems/edit-distance/)
 
 来自@**Johnny_牧云**的解析
 https://leetcode-cn.com/problems/edit-distance/solution/zi-di-xiang-shang-he-zi-ding-xiang-xia-by-powcai-3/
@@ -740,7 +740,7 @@ func min(a,b int) int {
 
 ### 背包问题
 
-- [分割等和子集（Medium）](https://leetcode-cn.com/problems/partition-equal-subset-sum/)
+#### [分割等和子集（Medium）](https://leetcode-cn.com/problems/partition-equal-subset-sum/)
 
 ```go
 func canPartition(nums []int) bool {
@@ -772,7 +772,7 @@ func canPartition(nums []int) bool {
 }
 ```
 
-- [零钱兑换 II （Medium）](https://leetcode-cn.com/problems/coin-change-2/)
+#### [零钱兑换 II （Medium）](https://leetcode-cn.com/problems/coin-change-2/)
 
 ```go
 func change(amount int, coins []int) int {
