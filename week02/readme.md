@@ -10,7 +10,7 @@
 
 ## homework
 
-- [LRU 缓存机制（Medium）](https://leetcode-cn.com/problems/lru-cache/)
+### [LRU 缓存机制（Medium）](https://leetcode-cn.com/problems/lru-cache/)
 
 ```go
 /*
@@ -112,7 +112,7 @@ func (this *LRUCache) removeTail() *DLinkedNode {
 // @lc code=end
 ```
 
-- [子域名访问计数（Easy）](https://leetcode-cn.com/problems/subdomain-visit-count/)
+### [子域名访问计数（Easy）](https://leetcode-cn.com/problems/subdomain-visit-count/)
 
 ```go
 /*
@@ -146,7 +146,7 @@ func subdomainVisits(cpdomains []string) (ans []string) {
 // @lc code=end
 ```
 
-- [数组的度（Easy）](https://leetcode-cn.com/problems/degree-of-an-array/)
+### [数组的度（Easy）](https://leetcode-cn.com/problems/degree-of-an-array/)
 
 ```go
 /*
@@ -189,7 +189,7 @@ func min(a,b int) int {
 // @lc code=end
 ```
 
-- [元素和为目标值的子矩阵数量（Hard）](https://leetcode-cn.com/problems/number-of-submatrices-that-sum-to-target/)
+### [元素和为目标值的子矩阵数量（Hard）](https://leetcode-cn.com/problems/number-of-submatrices-that-sum-to-target/)
 
 ```go
 /*
@@ -230,7 +230,7 @@ func numSubmatrixSumTarget(matrix [][]int, target int) (ans int) {
 // @lc code=end
 ```
 
-- [合并K 个升序链表（Hard） (要求：用分治实现，不要用堆)](https://leetcode-cn.com/problems/merge-k-sorted-lists/)
+### [合并K 个升序链表（Hard） (要求：用分治实现，不要用堆)](https://leetcode-cn.com/problems/merge-k-sorted-lists/)
 
 ```go
 /*
@@ -296,7 +296,7 @@ func mergeKLists(lists []*ListNode) *ListNode {
 
 ## 哈希表-集合-映射
 
-- [两数之和](https://leetcode-cn.com/problems/two-sum/description/)
+### [两数之和](https://leetcode-cn.com/problems/two-sum/description/)
 
 ```go
 /*
@@ -324,7 +324,7 @@ func twoSum(nums []int, target int) []int {
 // @lc code=end
 ```
 
-- [字母异位词分组](https://leetcode-cn.com/problems/group-anagrams/)
+### [字母异位词分组](https://leetcode-cn.com/problems/group-anagrams/)
 
 ```go
 /*
@@ -354,7 +354,7 @@ func groupAnagrams(strs []string) [][]string {
 // @lc code=end
 ```
 
-- [串联所有单词的子串](https://leetcode-cn.com/problems/substring-with-concatenation-of-all-words/)
+### [串联所有单词的子串](https://leetcode-cn.com/problems/substring-with-concatenation-of-all-words/)
 
 ```go
 /*
@@ -407,7 +407,7 @@ func findSubstring(s string, words []string) []int {
 
 ## LRU
 
-- [LRU 缓存机制](https://leetcode-cn.com/problems/lru-cache/)
+### [LRU 缓存机制](https://leetcode-cn.com/problems/lru-cache/)
 
 ```go
 同作业题
@@ -415,7 +415,7 @@ func findSubstring(s string, words []string) []int {
 
 ## 递归
 
-- [子集](https://leetcode-cn.com/problems/subsets/)
+### [子集](https://leetcode-cn.com/problems/subsets/)
 
 ```go
 /*
@@ -448,7 +448,7 @@ func subsets(nums []int) (ans [][]int) {
 // @lc code=end
 ```
 
-- [组合](https://leetcode-cn.com/problems/combinations/)
+### [组合](https://leetcode-cn.com/problems/combinations/)
 
 ```go
 /*
@@ -488,7 +488,7 @@ func combine(n int, k int) (ans [][]int) {
 // @lc code=end
 ```
 
-- [全排列](https://leetcode-cn.com/problems/permutations/)
+### [全排列](https://leetcode-cn.com/problems/permutations/)
 
 ```go
 /*
@@ -530,7 +530,7 @@ func permute(nums []int) (ans [][]int) {
 
 ## 树
 
-- [翻转二叉树](https://leetcode-cn.com/problems/invert-binary-tree/description/)
+### [翻转二叉树](https://leetcode-cn.com/problems/invert-binary-tree/description/)
 
 ```go
 /*
@@ -562,7 +562,7 @@ func permute(nums []int) (ans [][]int) {
 // @lc code=end
 ```
 
-- [验证二叉搜索树](https://leetcode-cn.com/problems/validate-binary-search-tree/)
+### [验证二叉搜索树](https://leetcode-cn.com/problems/validate-binary-search-tree/)
 
 ```go
 /*
@@ -598,7 +598,7 @@ func helper(root *TreeNode, lower,upper int)  bool {
 // @lc code=end
 ```
 
-- [二叉树的最大深度](https://leetcode-cn.com/problems/maximum-depth-of-binary-tree/)
+### [二叉树的最大深度](https://leetcode-cn.com/problems/maximum-depth-of-binary-tree/)
 
 ```go
 /*
@@ -631,7 +631,7 @@ func max(a int, b int) int {
 // @lc code=end
 ```
 
-- [二叉树的最小深度](https://leetcode-cn.com/problems/minimum-depth-of-binary-tree/)
+### [二叉树的最小深度](https://leetcode-cn.com/problems/minimum-depth-of-binary-tree/)
 
 ```go
 /*
@@ -669,7 +669,7 @@ func min(a int, b int) int {
 
 ## 分治
 
-- [Pow(x, n)](https://leetcode-cn.com/problems/powx-n/)
+### [Pow(x, n)](https://leetcode-cn.com/problems/powx-n/)
 
 ```go
 /*
@@ -696,7 +696,7 @@ func quickMul(x float64, n int) float64 {
 // @lc code=end
 ```
 
-- [括号生成](https://leetcode-cn.com/problems/powx-n/)
+### [括号生成](https://leetcode-cn.com/problems/powx-n/)
 
 ```go
 /*
