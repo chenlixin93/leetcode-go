@@ -11,7 +11,7 @@
 
 ## homework
 
-- [在 D 天内送达包裹的能力（Medium）](https://leetcode-cn.com/problems/capacity-to-ship-packages-within-d-days/)
+### [在 D 天内送达包裹的能力（Medium）](https://leetcode-cn.com/problems/capacity-to-ship-packages-within-d-days/)
 
 ```go
 func shipWithinDays(weights []int, days int) int {
@@ -44,12 +44,12 @@ func shipWithinDays(weights []int, days int) int {
 }
 ```
 
-- [在线选举（Medium）](https://leetcode-cn.com/problems/online-election/)
+### [在线选举（Medium）](https://leetcode-cn.com/problems/online-election/)
 
 ```go
 ```
 
-- [爱吃香蕉的珂珂（Medium）](https://leetcode-cn.com/problems/koko-eating-bananas/)
+### [爱吃香蕉的珂珂（Medium）](https://leetcode-cn.com/problems/koko-eating-bananas/)
 
 ```go
 func minEatingSpeed(piles []int, h int) int {
@@ -81,7 +81,7 @@ func possible(piles []int, H int, K int) bool {
 }
 ```
 
-- [区间和的个数（选做）（Hard）](https://leetcode-cn.com/problems/count-of-range-sum/)
+### [区间和的个数（选做）（Hard）](https://leetcode-cn.com/problems/count-of-range-sum/)
 
 ```go
 ```
@@ -90,7 +90,7 @@ func possible(piles []int, H int, K int) bool {
 
 ### 初级排序算法
 
-- 选择排序（该放哪个数了）
+#### 选择排序（该放哪个数了）
 
 ```go
 // 每次从未排序数据中找最小值，放到已排序序列的末尾
@@ -114,7 +114,7 @@ func selectSort(nums []int) []int {
 }
 ```
 
-- 插入排序（这个数该放哪）
+#### 插入排序（这个数该放哪）
 
 ```go
 // 从前到后依次考虑每个未排序数据，在已排序的序列总找到合适位置插入
@@ -134,7 +134,7 @@ func insertSort(nums []int) []int {
 }
 ```
 
-- 冒泡排序
+#### 冒泡排序
 
 ```go
 // 不断循环扫描，每次查看相邻元素，如果逆序则交换
@@ -159,7 +159,7 @@ func bubbleSort(nums []int) []int {
 
 - 希尔排序（Shell Sort是对插入排序的优化）（选做）
 
-- 归并排序（基于分治，先排序左右子数组，然后合并两个有序数组）
+#### 归并排序（基于分治，先排序左右子数组，然后合并两个有序数组）
 
 ```go
 func sortArray(nums []int) []int {
@@ -212,7 +212,7 @@ func merge(nums []int, left,mid,right int) {
 }
 ```
 
-- 快速排序（基于分治，先调配出左右子数组，然后对左右子数组分别进行排序）
+#### 快速排序（基于分治，先调配出左右子数组，然后对左右子数组分别进行排序）
 
 ```go
 func sortArray(nums []int) []int {
@@ -276,13 +276,13 @@ func partition(nums []int, l,r int) int {
 
 ### 习题
 
-- [排序数组（Medium）](https://leetcode-cn.com/problems/sort-an-array/)
+#### [排序数组（Medium）](https://leetcode-cn.com/problems/sort-an-array/)
 
 ```go
 // 使用快排即可
 ```
 
-- [数组的相对排序](https://leetcode-cn.com/problems/relative-sort-array/)
+#### [数组的相对排序](https://leetcode-cn.com/problems/relative-sort-array/)
 
 ```go
 func relativeSortArray(arr1 []int, arr2 []int) []int {
@@ -314,7 +314,7 @@ func relativeSortArray(arr1 []int, arr2 []int) []int {
 }
 ```
 
-- [合并区间（Medium）](https://leetcode-cn.com/problems/merge-intervals/)
+#### [合并区间（Medium）](https://leetcode-cn.com/problems/merge-intervals/)
 
 ```go
 // 解法1: 双关键字快排
@@ -391,7 +391,7 @@ func max(a,b int) int {
 }
 ```
 
-- [数组中的第 K 个最大元素（Medium）](https://leetcode-cn.com/problems/kth-largest-element-in-an-array/)
+#### [数组中的第 K 个最大元素（Medium）](https://leetcode-cn.com/problems/kth-largest-element-in-an-array/)
 
 ```go
 // 解法1：大根堆
@@ -441,12 +441,12 @@ func (h *MaxIntHeap) Pop() interface{} {
 }
 ```
 
-- [货仓选址](https://www.acwing.com/problem/content/description/106/)
+#### [货仓选址](https://www.acwing.com/problem/content/description/106/)
 
 ```go
 ```
 
-- [翻转对（Hard）](https://leetcode-cn.com/problems/reverse-pairs/)
+#### [翻转对（Hard）](https://leetcode-cn.com/problems/reverse-pairs/)
 
 ```go
 // 解题思路
@@ -521,12 +521,12 @@ func merge(nums []int, left,mid,right int) {
 
 ## 贪心
 
-- [零钱兑换（Medium）](https://leetcode-cn.com/problems/coin-change/)
+### [零钱兑换（Medium）](https://leetcode-cn.com/problems/coin-change/)
 
 ```go
 ```
 
-- [柠檬水找零（Easy）](https://leetcode-cn.com/problems/lemonade-change/description/)
+### [柠檬水找零（Easy）](https://leetcode-cn.com/problems/lemonade-change/description/)
 
 ```go
 var count map[int]int
@@ -553,7 +553,7 @@ func exchange(amount int) bool {
 }
 ```
 
-- [分发饼干（Easy）](https://leetcode-cn.com/problems/assign-cookies/description/)
+### [分发饼干（Easy）](https://leetcode-cn.com/problems/assign-cookies/description/)
 
 ```go
 // 效率 32ms；
@@ -575,7 +575,7 @@ func findContentChildren(g []int, s []int) int {
 }
 ```
 
-- [买卖股票的最佳时机 II （Easy）](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-ii/)
+### [买卖股票的最佳时机 II （Easy）](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-ii/)
 
 ```go
 func maxProfit(prices []int) int {
@@ -593,7 +593,7 @@ func maxProfit(prices []int) int {
 }
 ```
 
-- [跳跃游戏 II （Medium）](https://leetcode-cn.com/problems/jump-game-ii/)
+### [跳跃游戏 II （Medium）](https://leetcode-cn.com/problems/jump-game-ii/)
 
 ```go
 func jump(nums []int) int {
@@ -625,7 +625,7 @@ func jump(nums []int) int {
 }
 ```
 
-- [完成所有任务的最少初始能量（Hard）](https://leetcode-cn.com/problems/minimum-initial-energy-to-finish-tasks/)
+### [完成所有任务的最少初始能量（Hard）](https://leetcode-cn.com/problems/minimum-initial-energy-to-finish-tasks/)
 
 图示
 
