@@ -9,7 +9,7 @@
 
 ## homework
 
-- [从中序与后序遍历序列构造二叉树（Medium）](https://leetcode-cn.com/problems/construct-binary-tree-from-inorder-and-postorder-traversal/)
+### [从中序与后序遍历序列构造二叉树（Medium）](https://leetcode-cn.com/problems/construct-binary-tree-from-inorder-and-postorder-traversal/)
 
 ```go
 // 递归
@@ -38,7 +38,7 @@ func buildTree(inorder []int, postorder []int) *TreeNode {
 }
 ```
 
-- [课程表 II （Medium）](https://leetcode-cn.com/problems/course-schedule-ii/)
+### [课程表 II （Medium）](https://leetcode-cn.com/problems/course-schedule-ii/)
 
 ```go
 // BFS拓扑排序模板
@@ -89,7 +89,7 @@ func findOrder(numCourses int, prerequisites [][]int) []int {
 }
 ```
 
-- [被围绕的区域（Medium）](https://leetcode-cn.com/problems/surrounded-regions/)
+### [被围绕的区域（Medium）](https://leetcode-cn.com/problems/surrounded-regions/)
 
 ```go
 // DFS
@@ -140,7 +140,7 @@ func solve(board [][]byte)  {
 
 ## 树-二叉树-树的遍历
 
-- [二叉树的中序遍历（Easy）](https://leetcode-cn.com/problems/binary-tree-inorder-traversal/)
+### [二叉树的中序遍历（Easy）](https://leetcode-cn.com/problems/binary-tree-inorder-traversal/)
 
 ```go
 /**
@@ -164,7 +164,7 @@ func inorderTraversal(root *TreeNode) (res []int) {
 }
 ```
 
-- [N 叉树的前序遍历（Easy）](https://leetcode-cn.com/problems/n-ary-tree-preorder-traversal/description/)
+### [N 叉树的前序遍历（Easy）](https://leetcode-cn.com/problems/n-ary-tree-preorder-traversal/description/)
 
 ```go
 /**
@@ -191,7 +191,7 @@ func preorder(root *Node) (res []int) {
 }
 ```
 
-- [N 叉树的层序遍历（Medium）](https://leetcode-cn.com/problems/n-ary-tree-level-order-traversal/)
+### [N 叉树的层序遍历（Medium）](https://leetcode-cn.com/problems/n-ary-tree-level-order-traversal/)
 
 ```go
 /**
@@ -219,12 +219,12 @@ func levelOrder(root *Node) (res [][]int) {
 }
 ```
 
-- [二叉树的序列化与反序列化（Hard）](https://leetcode-cn.com/problems/serialize-and-deserialize-binary-tree/)
+### [二叉树的序列化与反序列化（Hard）](https://leetcode-cn.com/problems/serialize-and-deserialize-binary-tree/)
 
 ```go
 ```
 
-- [从前序与中序遍历序列构造二叉树（Medium）](https://leetcode-cn.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal/)
+### [从前序与中序遍历序列构造二叉树（Medium）](https://leetcode-cn.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal/)
 
 ```go
 // 递归
@@ -262,13 +262,13 @@ func buildTree(preorder []int, inorder []int) *TreeNode {
 
 ## 树的直径-最近公共祖先-树的变形
 
-- [树的直径（此题为 LeetCode 会员题选做）]()
+### [树的直径（此题为 LeetCode 会员题选做）]()
 
 ```go
 
 ```
 
-- [二叉树的最近公共祖先（Medium）](https://leetcode-cn.com/problems/lowest-common-ancestor-of-a-binary-tree/)
+### [二叉树的最近公共祖先（Medium）](https://leetcode-cn.com/problems/lowest-common-ancestor-of-a-binary-tree/)
 
 ```go
 /**
@@ -315,7 +315,7 @@ func buildTree(preorder []int, inorder []int) *TreeNode {
 
 ## 图-图的遍历
 
-- [冗余连接（Medium）](https://leetcode-cn.com/problems/redundant-connection/)
+### [冗余连接（Medium）](https://leetcode-cn.com/problems/redundant-connection/)
 
 ```go
 // DFS找环法
@@ -372,7 +372,7 @@ func findRedundantConnection(input [][]int) (ans []int) {
 }
 ```
 
-- [课程表（Medium）](https://leetcode-cn.com/problems/course-schedule/)
+### [课程表（Medium）](https://leetcode-cn.com/problems/course-schedule/)
 
 ```go
 // BFS拓扑排序模板
@@ -423,7 +423,7 @@ func canFinish(numCourses int, prerequisites [][]int) bool {
 
 ## DFS-BFS
 
-- [电话号码的字母组合（Medium）](lems/letter-combinations-of-a-phone-number/)
+### [电话号码的字母组合（Medium）](lems/letter-combinations-of-a-phone-number/)
 
 ```go
 // DFS
@@ -457,7 +457,7 @@ func letterCombinations(digits string) (ans []string) {
 }
 ```
 
-- [N 皇后（Hard）](https://leetcode-cn.com/problems/n-queens/)
+### [N 皇后（Hard）](https://leetcode-cn.com/problems/n-queens/)
 
 ```go
 // DFS，排列模板 + 合法性检查
@@ -514,7 +514,7 @@ func solveNQueens(n int) (res [][]string) {
 }
 ```
 
-- [岛屿数量（Medium）](https://leetcode-cn.com/problems/number-of-islands/)
+### [岛屿数量（Medium）](https://leetcode-cn.com/problems/number-of-islands/)
 
 ```go
 // DFS做法
@@ -558,7 +558,7 @@ func numIslands(grid [][]byte) (ans int) {
 }
 ```
 
-- [最小基因变化（Medium）](https://leetcode-cn.com/problems/minimum-genetic-mutation/)
+### [最小基因变化（Medium）](https://leetcode-cn.com/problems/minimum-genetic-mutation/)
 
 ```go
 // BFS
@@ -607,7 +607,7 @@ func minMutation(start string, end string, bank []string) int {
 }
 ```
 
-- [矩阵中的最长递增路径（Hard）]()
+### [矩阵中的最长递增路径（Hard）]()
 
 ```go
 ```
