@@ -61,7 +61,9 @@ C++: set, multiset, map, multimap
 Java: TreeSet, TreeMap
 Python: OrderedDict
 
-- 尝试用语言内置的有序集合库，或写一棵平衡树，来解决 [滑动窗口最大值（Hard）](https://leetcode-cn.com/problems/sliding-window-maximum/)
+### [滑动窗口最大值（Hard）](https://leetcode-cn.com/problems/sliding-window-maximum/)
+
+- 尝试用语言内置的有序集合库，或写一棵平衡树，来解决 
 
 **解法1：手动快排keys【失败】**
 
@@ -218,7 +220,9 @@ func maxSlidingWindow(nums []int, k int) []int {
 }
 ```
 
-- 尝试用语言内置的有序集合库，或写一棵平衡树，来解决 [邻值查找（Medium）AcWing](https://www.acwing.com/problem/content/138/)
+### [邻值查找（Medium）AcWing](https://www.acwing.com/problem/content/138/)
+
+- 尝试用语言内置的有序集合库，或写一棵平衡树，来解决 
 
 ```go
 ```
