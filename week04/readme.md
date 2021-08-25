@@ -9,7 +9,7 @@
 
 ## homework
 
-- [设计推特（Medium）](https://leetcode-cn.com/problems/design-twitter/)
+### [设计推特（Medium）](https://leetcode-cn.com/problems/design-twitter/)
 
 ```go
 type Twitter struct {
@@ -84,7 +84,7 @@ func (this *Twitter) Unfollow(followerId int, followeeId int)  {
  */
 ```
 
-- [数据流的中位数（选做）（Hard）](https://leetcode-cn.com/problems/find-median-from-data-stream/)
+### [数据流的中位数（选做）（Hard）](https://leetcode-cn.com/problems/find-median-from-data-stream/)
 
 **解法1-简单排序**
 
@@ -240,7 +240,7 @@ func (h *MaxIntHeap) Top() int {
  */
 ```
 
-- [寻找旋转排序数组中的最小值 II （Hard）](https://leetcode-cn.com/problems/find-minimum-in-rotated-sorted-array-ii/)
+### [寻找旋转排序数组中的最小值 II （Hard）](https://leetcode-cn.com/problems/find-minimum-in-rotated-sorted-array-ii/)
 
 ```go
 func findMin(nums []int) int {
@@ -266,9 +266,9 @@ func findMin(nums []int) int {
 
 ## 二叉堆
 
-- [golang中container/heap包用法](https://studygolang.com/articles/5415) 
+### [golang中container/heap包用法](https://studygolang.com/articles/5415) 
 
-- [合并 K 个升序链表（Hard）](https://leetcode-cn.com/problems/merge-k-sorted-lists/)
+### [合并 K 个升序链表（Hard）](https://leetcode-cn.com/problems/merge-k-sorted-lists/)
 
 ```go
 /**
@@ -335,7 +335,7 @@ func (h *IntHeap) Pop() interface{} {
 }
 ```
 
-- [滑动窗口最大值（Hard）](https://leetcode-cn.com/problems/sliding-window-maximum/)
+### [滑动窗口最大值（Hard）](https://leetcode-cn.com/problems/sliding-window-maximum/)
 
 ```go
 import (
@@ -384,7 +384,7 @@ func (h *hp) Pop() interface{} {
 
 ## 二叉搜索树
 
-- [二叉搜索树中的插入操作（Medium）](https://leetcode-cn.com/problems/insert-into-a-binary-search-tree/)
+### [二叉搜索树中的插入操作（Medium）](https://leetcode-cn.com/problems/insert-into-a-binary-search-tree/)
 
 ```go
 // 模板
@@ -413,7 +413,7 @@ func insertIntoBST(root *TreeNode, val int) *TreeNode {
 }
 ```
 
-- [后继者（Medium）](https://leetcode-cn.com/problems/successor-lcci/)
+### [后继者（Medium）](https://leetcode-cn.com/problems/successor-lcci/)
 
 ```go
 /**
@@ -456,7 +456,7 @@ func inorderSuccessor(root *TreeNode, p *TreeNode) *TreeNode {
 }
 ```
 
-- [删除二叉搜索树中的节点（Medium）](https://leetcode-cn.com/problems/delete-node-in-a-bst/)
+### [删除二叉搜索树中的节点（Medium）](https://leetcode-cn.com/problems/delete-node-in-a-bst/)
 
 ```go
 // 模板
@@ -489,7 +489,7 @@ func deleteNode(root *TreeNode, key int) *TreeNode {
 }
 ```
 
-- [把二叉搜索树转换为累加树（Medium）](https://leetcode-cn.com/problems/convert-bst-to-greater-tree/)
+### [把二叉搜索树转换为累加树（Medium）](https://leetcode-cn.com/problems/convert-bst-to-greater-tree/)
 
 ```go
 
@@ -497,7 +497,7 @@ func deleteNode(root *TreeNode, key int) *TreeNode {
 
 ## 二分查找
 
-- [二分查找（Easy）](https://leetcode-cn.com/problems/binary-search/)
+### [二分查找（Easy）](https://leetcode-cn.com/problems/binary-search/)
 
 ```go
 // 模版2
@@ -522,7 +522,7 @@ func search(nums []int, target int) int {
 }
 ```
 
-- [在排序数组中查找元素的第一个和最后一个位置（Medium）](https://leetcode-cn.com/problems/find-first-and-last-position-of-element-in-sorted-array/)
+### [在排序数组中查找元素的第一个和最后一个位置（Medium）](https://leetcode-cn.com/problems/find-first-and-last-position-of-element-in-sorted-array/)
 
 ```go
 // 模板？？
@@ -560,7 +560,7 @@ func searchRange(nums []int, target int) []int {
 }
 ```
 
-- [x 的平方根（Easy）](https://leetcode-cn.com/problems/sqrtx/)
+### [x 的平方根（Easy）](https://leetcode-cn.com/problems/sqrtx/)
 
 ```go
 func mySqrt(x int) int {
@@ -578,7 +578,7 @@ func mySqrt(x int) int {
 }
 ```
 
-- [搜索二维矩阵（Medium）](https://leetcode-cn.com/problems/search-a-2d-matrix/)
+### [搜索二维矩阵（Medium）](https://leetcode-cn.com/problems/search-a-2d-matrix/)
 
 ```go
 // 简单易懂，双百解法
@@ -606,7 +606,7 @@ func searchMatrix(matrix [][]int, target int) bool {
 // 二分，后续补上
 ```
 
-- [寻找旋转排序数组中的最小值（Medium）](https://leetcode-cn.com/problems/find-minimum-in-rotated-sorted-array/)
+### [寻找旋转排序数组中的最小值（Medium）](https://leetcode-cn.com/problems/find-minimum-in-rotated-sorted-array/)
 
 ```go
 func findMin(nums []int) int {
@@ -628,18 +628,18 @@ func findMin(nums []int) int {
 
 ## 三分查找
 
-- [寻找峰值（Medium）](https://leetcode-cn.com/problems/find-peak-element/)
+### [寻找峰值（Medium）](https://leetcode-cn.com/problems/find-peak-element/)
 
 ```go
 
 ```
-- [猜数字大小（Easy）](https://leetcode-cn.com/problems/guess-number-higher-or-lower/)
+### [猜数字大小（Easy）](https://leetcode-cn.com/problems/guess-number-higher-or-lower/)
 
 ```go
 
 ```
 
-- [分割数组的最大值（Hard）](https://leetcode-cn.com/problems/split-array-largest-sum/)
+### [分割数组的最大值（Hard）](https://leetcode-cn.com/problems/split-array-largest-sum/)
 
 ```go
 func splitArray(nums []int, m int) int {
@@ -687,7 +687,7 @@ func max(a,b int) int {
 }
 ```
 
-- [制作 m 束花所需的最少天数（Medium）](https://leetcode-cn.com/problems/minimum-number-of-days-to-make-m-bouquets/)
+### [制作 m 束花所需的最少天数（Medium）](https://leetcode-cn.com/problems/minimum-number-of-days-to-make-m-bouquets/)
 
 ```go
 func minDays(bloomDay []int, m int, k int) int {
