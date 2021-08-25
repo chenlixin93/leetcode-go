@@ -20,73 +20,73 @@
 
 ### 基础问题
 
-- [转换成小写字母（Easy）](https://leetcode-cn.com/problems/to-lower-case/)
+#### [转换成小写字母（Easy）](https://leetcode-cn.com/problems/to-lower-case/)
 
 ```go
 ```
 
-- [最后一个单词的长度（Easy）](https://leetcode-cn.com/problems/length-of-last-word/)
+#### [最后一个单词的长度（Easy）](https://leetcode-cn.com/problems/length-of-last-word/)
 
 ```go
 ```
 
-- [宝石与石头（Easy）](https://leetcode-cn.com/problems/jewels-and-stones/)
+#### [宝石与石头（Easy）](https://leetcode-cn.com/problems/jewels-and-stones/)
 
 ```go
 ```
 
-- [字符串中的第一个唯一字符（Easy）](https://leetcode-cn.com/problems/first-unique-character-in-a-string/)
+#### [字符串中的第一个唯一字符（Easy）](https://leetcode-cn.com/problems/first-unique-character-in-a-string/)
 
 ```go
 ```
 
-- [最长公共前缀（Easy）](https://leetcode-cn.com/problems/longest-common-prefix/description/)
+#### [最长公共前缀（Easy）](https://leetcode-cn.com/problems/longest-common-prefix/description/)
 
 ```go
 ```
 
 ### 字符串操作
 
-- [反转字符串（Easy）](https://leetcode-cn.com/problems/reverse-string/)
+#### [反转字符串（Easy）](https://leetcode-cn.com/problems/reverse-string/)
 
 ```go
 ```
 
-- [翻转字符串里的单词（Medium）](https://leetcode-cn.com/problems/reverse-words-in-a-string/)
+#### [翻转字符串里的单词（Medium）](https://leetcode-cn.com/problems/reverse-words-in-a-string/)
 
 ```go
 ```
 
-- [仅仅反转字母（Easy）](https://leetcode-cn.com/problems/reverse-only-letters/)
+#### [仅仅反转字母（Easy）](https://leetcode-cn.com/problems/reverse-only-letters/)
 
 ```go
 ```
 
 ### 同构或异位词系列问题
 
-- [同构字符串（Easy）](https://leetcode-cn.com/problems/isomorphic-strings/)
+#### [同构字符串（Easy）](https://leetcode-cn.com/problems/isomorphic-strings/)
 
 ```go
 ```
 
-- [有效的字母异位词（Easy）](https://leetcode-cn.com/problems/valid-anagram/)
+#### [有效的字母异位词（Easy）](https://leetcode-cn.com/problems/valid-anagram/)
 
 ```go
 ```
 
-- [字母异位词分组（Medium）](https://leetcode-cn.com/problems/group-anagrams/)
+#### [字母异位词分组（Medium）](https://leetcode-cn.com/problems/group-anagrams/)
 
 ```go
 ```
 
-- [找到字符串中所有字母异位词（Medium）](https://leetcode-cn.com/problems/find-all-anagrams-in-a-string/)
+#### [找到字符串中所有字母异位词（Medium）](https://leetcode-cn.com/problems/find-all-anagrams-in-a-string/)
 
 ```go
 ```
 
 ### 字符串与动态规划
 
-- [通配符匹配（Hard）](https://leetcode-cn.com/problems/wildcard-matching/)
+#### [通配符匹配（Hard）](https://leetcode-cn.com/problems/wildcard-matching/)
 
 ```go
 ```
@@ -95,24 +95,24 @@
 
 ### 最短路
 
-- [网络延迟时间（Medium）](https://leetcode-cn.com/problems/network-delay-time/)
+#### [网络延迟时间（Medium）](https://leetcode-cn.com/problems/network-delay-time/)
 
 ```go
 ```
 
-- [阈值距离内邻居最少的城市（Medium）](https://leetcode-cn.com/problems/find-the-city-with-the-smallest-number-of-neighbors-at-a-threshold-distance/)
+#### [阈值距离内邻居最少的城市（Medium）](https://leetcode-cn.com/problems/find-the-city-with-the-smallest-number-of-neighbors-at-a-threshold-distance/)
 
 ```go
 ```
 
-- [Dijkstra 求最短路 II （Easy）（ACWing）](https://www.acwing.com/problem/content/852/)
+#### [Dijkstra 求最短路 II （Easy）（ACWing）](https://www.acwing.com/problem/content/852/)
 
 ```go
 ```
 
 ### 最小生成树
 
-- [连接所有点的最小费用（Medium）](https://leetcode-cn.com/problems/min-cost-to-connect-all-points/)
+#### [连接所有点的最小费用（Medium）](https://leetcode-cn.com/problems/min-cost-to-connect-all-points/)
 
 ```go
 ```
@@ -129,7 +129,7 @@ Go语言的字符有以下两种：
 一种是 uint8 类型，或者叫 byte 型，代表了 ASCII 码的一个字符。
 另一种是 rune 类型，代表一个 UTF-8 字符，当需要处理中文、日文或者其他复合字符时，则需要用到 rune 类型。rune 类型等价于 int32 类型。
 
-- [字符串转换整数 (atoi) （Medium）](https://leetcode-cn.com/problems/string-to-integer-atoi/)
+#### [字符串转换整数 (atoi) （Medium）](https://leetcode-cn.com/problems/string-to-integer-atoi/)
 
 ```go
 func myAtoi(s string) int {
@@ -230,7 +230,7 @@ Hash(s[2..4]) =>（H[5] - H[2] * b^3）
 Hash(s[l...r]) => ( H[r+1] - H[l] * b^(r-l+1) ) % p, O(1)
 ```
 
-- [实现 strStr() （Easy）](https://leetcode-cn.com/problems/implement-strstr/)
+#### [实现 strStr() （Easy）](https://leetcode-cn.com/problems/implement-strstr/)
 
 ```go
 func strStr(haystack string, needle string) int {
@@ -283,14 +283,14 @@ func calcHash(H,p131 []int64, p int64, l,r int) int64 {
 }
 ```
 
-- [重复叠加字符串匹配（Medium）](https://leetcode-cn.com/problems/repeated-string-match/)
+#### [重复叠加字符串匹配（Medium）](https://leetcode-cn.com/problems/repeated-string-match/)
 
 ```go
 ```
 
 ### 回文串系列
 
-- [验证回文串（Easy）](https://leetcode-cn.com/problems/valid-palindrome/)
+#### [验证回文串（Easy）](https://leetcode-cn.com/problems/valid-palindrome/)
 
 ```go
 func isPalindrome(s string) bool {
@@ -318,7 +318,7 @@ func isPalindrome(s string) bool {
 // 效率较低 192ms
 ```
 
-- [验证回文字符串 Ⅱ（Easy）（贪心 + 验证）](https://leetcode-cn.com/problems/valid-palindrome-ii/)
+#### [验证回文字符串 Ⅱ（Easy）（贪心 + 验证）](https://leetcode-cn.com/problems/valid-palindrome-ii/)
 
 ```go
 func validPalindrome(s string) bool {
@@ -342,7 +342,7 @@ func validPalindromeHelper(s string, l,r int, canDelete bool) bool {
 }
 ```
 
-- [最长回文子串（Medium）](https://leetcode-cn.com/problems/longest-palindromic-substring/)
+#### [最长回文子串（Medium）](https://leetcode-cn.com/problems/longest-palindromic-substring/)
 
 **解法1**
 ```go
@@ -488,7 +488,7 @@ func calcSuf(sufH,p131 []int64, p int64, l,r int) int64 {
 
 ### 字符串与动态规划 1
 
-- [正则表达式匹配（Hard）](https://leetcode-cn.com/problems/regular-expression-matching/)
+#### [正则表达式匹配（Hard）](https://leetcode-cn.com/problems/regular-expression-matching/)
 
 ```go
 func isMatch(s string, p string) bool {
@@ -531,7 +531,7 @@ func isMatch(s string, p string) bool {
 }
 ```
 
-- [不同的子序列（Hard）](https://leetcode-cn.com/problems/distinct-subsequences/)
+#### [不同的子序列（Hard）](https://leetcode-cn.com/problems/distinct-subsequences/)
 
 ```go
 func numDistinct(s string, t string) int {
@@ -564,7 +564,7 @@ func numDistinct(s string, t string) int {
 
 ### KMP字符串模版
 
-- [实现 strStr() （Easy）](https://leetcode-cn.com/problems/implement-strstr/)
+#### [实现 strStr() （Easy）](https://leetcode-cn.com/problems/implement-strstr/)
 
 ```go
 ```
