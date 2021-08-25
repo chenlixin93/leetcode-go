@@ -2,7 +2,7 @@
 
 ## homework
 
-- [二进制矩阵中的最短路径（Medium）](https://leetcode-cn.com/problems/shortest-path-in-binary-matrix/)
+### [二进制矩阵中的最短路径（Medium）](https://leetcode-cn.com/problems/shortest-path-in-binary-matrix/)
 
 ```go
 func shortestPathBinaryMatrix(grid [][]int) int {
@@ -223,12 +223,12 @@ func maxSlidingWindow(nums []int, k int) []int {
 ```go
 ```
 
-- [设计跳表（选做）（Hard）]()
+### [设计跳表（选做）（Hard）]()
 
 ```go
 ```
 
-- [普通平衡树（选做）（Medium）AcWing](https://www.acwing.com/problem/content/255/s)
+### [普通平衡树（选做）（Medium）AcWing](https://www.acwing.com/problem/content/255/s)
 
 ```go
 ```
@@ -267,7 +267,7 @@ DFS、BFS对状态空间的遍历形成一棵树（或一张图）
 形象地说就像剪去“搜索树”的枝条，所以叫剪枝
 ```
 
-- [括号生成（Medium）](https://leetcode-cn.com/problems/generate-parentheses/)
+#### [括号生成（Medium）](https://leetcode-cn.com/problems/generate-parentheses/)
 
 蛮力搜索：指数型，每个位置放两种括号之一，最后验证，O(n*2^n)
 
@@ -296,7 +296,7 @@ func generateParenthesis(n int) (ans []string) {
 }
 ```
 
-- [N 皇后（Hard）](https://leetcode-cn.com/problems/n-queens/)
+#### [N 皇后（Hard）](https://leetcode-cn.com/problems/n-queens/)
 
 蛮力搜索：排列型，每行放的皇后的列号是一个排列，最后验证斜线，O(n*n!)
 
@@ -360,7 +360,7 @@ func solveNQueens(n int) (res [][]string) {
 }
 ```
 
-- [有效的数独（Medium）](https://leetcode-cn.com/problems/valid-sudoku/)
+#### [有效的数独（Medium）](https://leetcode-cn.com/problems/valid-sudoku/)
 
 ```go
 func isValidSudoku(board [][]byte) bool {
@@ -390,7 +390,7 @@ func isValidSudoku(board [][]byte) bool {
 }
 ```
 
-- [解数独（Hard）](https://leetcode-cn.com/problems/sudoku-solver/)
+#### [解数独（Hard）](https://leetcode-cn.com/problems/sudoku-solver/)
 
 > 优先选择“能填的合法数字最少的位置”，而不是第一个位置
 
@@ -539,7 +539,7 @@ M可能很大，O(NM)的动态规划实际上是伪多项式算法
 O(2^n) 优化到 O(N*2^(n/2))
 ```
 
-- [单词接龙（Hard）](https://leetcode-cn.com/problems/word-ladder/)
+#### [单词接龙（Hard）](https://leetcode-cn.com/problems/word-ladder/)
 
 **解法1: 单向BFS**
 
@@ -679,7 +679,7 @@ A*算法的关键是设计一个`估价函数`：
 只要保证以下原则，当目标状态第一次从堆中被取出时，就得到了最优解
 ```
 
-- [滑动谜题（Hard）](https://leetcode-cn.com/problems/sliding-puzzle/)
+#### [滑动谜题（Hard）](https://leetcode-cn.com/problems/sliding-puzzle/)
 
 **解法1：普通BFS**
 
@@ -767,12 +767,12 @@ func getZeroIndex(a []int) int {
 
 ```
 
-- [八数码（Medium）AcWing](https://www.acwing.com/problem/content/181/)
+#### [八数码（Medium）AcWing](https://www.acwing.com/problem/content/181/)
 
 ```go
 ```
 
-- [八数码（打印方案）（Medium）AcWing](https://www.acwing.com/problem/content/847/)
+#### [八数码（打印方案）（Medium）AcWing](https://www.acwing.com/problem/content/847/)
 
 ```go
 ```
