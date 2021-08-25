@@ -10,8 +10,7 @@
 
 ## homework
 
-- [冗余连接（Medium）](https://leetcode-cn.com/problems/redundant-connection/)
-
+### [冗余连接（Medium）](https://leetcode-cn.com/problems/redundant-connection/)
 
 **并查集**
 
@@ -105,7 +104,7 @@ func findRedundantConnection(input [][]int) (ans []int) {
 }
 ```
 
-- [岛屿数量（Medium）](https://leetcode-cn.com/problems/number-of-islands/)
+### [岛屿数量（Medium）](https://leetcode-cn.com/problems/number-of-islands/)
 
 **并查集**
 
@@ -264,7 +263,7 @@ for (int i = 2; i <= n; i++) {
 
 一旦发现冗余，或者有更高效维护候选“候选集合”的数据结构，就可以省去一层循环扫描！
 
-- [满足不等式的最大值（Hard）](https://leetcode-cn.com/problems/max-value-of-equation/)
+### [满足不等式的最大值（Hard）](https://leetcode-cn.com/problems/max-value-of-equation/)
 
 ```go
 func findMaxValueOfEquation(points [][]int, k int) int {
@@ -312,7 +311,7 @@ func max(a,b int) int {
 // 引入deque实现 https://github.com/gammazero/deque/blob/master/deque.go
 ```
 
-- [环形子数组的最大和（Medium）](https://leetcode-cn.com/problems/maximum-sum-circular-subarray/)
+### [环形子数组的最大和（Medium）](https://leetcode-cn.com/problems/maximum-sum-circular-subarray/)
 
 ```go
 ```
@@ -327,7 +326,7 @@ func max(a,b int) int {
 // 在计算区间长度为len的子问题是，要先计算好所有长度<len的子问题
 ```
 
-- [戳气球（Hard）](https://leetcode-cn.com/problems/burst-balloons/)
+### [戳气球（Hard）](https://leetcode-cn.com/problems/burst-balloons/)
 
 ```go
 // 思路一：先戳哪个气球？
@@ -372,7 +371,7 @@ func max(a,b int) int {
 }
 ```
 
-- [合并石头的最低成本（Hard](https://leetcode-cn.com/problems/minimum-cost-to-merge-stones/)
+### [合并石头的最低成本（Hard](https://leetcode-cn.com/problems/minimum-cost-to-merge-stones/)
 
 ```go
 // 思路：
@@ -456,7 +455,7 @@ func min(a,b int) int {
 // 复杂的题目可以在此基础上增加更多与题目相关的状态、决策
 ```
 
-- [打家劫舍 III （Medium）](https://leetcode-cn.com/problems/house-robber-iii/)
+### [打家劫舍 III （Medium）](https://leetcode-cn.com/problems/house-robber-iii/)
 
 ```go
 /**
@@ -538,7 +537,7 @@ func max(a,b int) int {
 // 分组思想--前缀相同的字符串在同一子树中
 ```
 
-- [实现 Trie (前缀树) （Medium）](https://leetcode-cn.com/problems/implement-trie-prefix-tree/)
+### [实现 Trie (前缀树) （Medium）](https://leetcode-cn.com/problems/implement-trie-prefix-tree/)
 
 ```go
 // 初版
@@ -675,7 +674,7 @@ func (this *Trie) solve(word string, insertIfNotExist bool, searchPrefix bool) b
  */
 ```
 
-- [单词搜索 II （Hard）](https://leetcode-cn.com/problems/word-search-ii/)
+### [单词搜索 II （Hard）](https://leetcode-cn.com/problems/word-search-ii/)
 
 ```go
 func findWords(board [][]byte, words []string) (ans []string) {
@@ -826,7 +825,7 @@ func (s *DisjointSet) Join(x, y int) {
 }
 ```
 
-- [省份数量（Medium）](https://leetcode-cn.com/problems/number-of-provinces/)
+### [省份数量（Medium）](https://leetcode-cn.com/problems/number-of-provinces/)
 
 ```go
 func findCircleNum(isConnected [][]int) int {
@@ -877,7 +876,7 @@ func (s *DisjointSet) Join(x, y int) {
 
 ```
 
-- [被围绕的区域（Medium）](https://leetcode-cn.com/problems/surrounded-regions/)
+### [被围绕的区域（Medium）](https://leetcode-cn.com/problems/surrounded-regions/)
 
 ```go
 func solve(board [][]byte)  {
