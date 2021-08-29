@@ -89,7 +89,82 @@ void add(int x, int y) {
 
 ### [区域和检索 - 数组可修改（Medium）](https://leetcode-cn.com/problems/range-sum-query-mutable/)
 
+**解法1: 树状数组**
+
 ```go
+type NumArray struct {
+    n int
+    a []int // 单点数组
+    c []int // 前缀和数组
+}
+
+
+func Constructor(nums []int) NumArray {
+    n := len(nums)
+    a := make([]int, n + 1) // 下标从1开始
+    c := make([]int, n + 1) // 下标从1开始
+
+    res := NumArray{
+        n : n,
+        a : a,
+        c : c,
+    }
+    //fmt.Println(res)
+    for i := 1; i <= n; i++ {
+        res.a[i] = nums[i - 1]
+        add(i, res.a[i], &res.c, n)
+    }
+    //fmt.Println(res)
+    return res
+}
+
+func (this *NumArray) Update(index int, val int)  {
+    index++ // 下标从1开始
+    delta := val - this.a[index]
+    add(index, delta, &this.c, this.n)
+    this.a[index] = val
+}
+
+
+func (this *NumArray) SumRange(left int, right int) int {
+    left++ // 下标从1开始
+    right++ // 下标从1开始
+    return query(right, &this.c) - query(left - 1, &this.c)
+}
+
+func query(x int, c *[]int) int {
+    ans := 0
+    for ; x > 0; x -= lowbit(x) {
+        ans += (*c)[x]
+    }
+    return ans
+}
+
+// 单点增加，所有祖先结点都应该加上变化
+func add(x,delta int, c *[]int, n int) {
+    for ; x <= n; x += lowbit(x) {
+        (*c)[x] += delta
+    }
+}
+
+// 求出二进制的最低为1和后面0值组成的数
+func lowbit(x int) int {
+    return x & -x
+}
+
+
+/**
+ * Your NumArray object will be instantiated and called as such:
+ * obj := Constructor(nums);
+ * obj.Update(index,val);
+ * param_2 := obj.SumRange(left,right);
+ */
+```
+
+**解法2: 线段树**
+
+```go
+
 ```
 
 ## 线段树
