@@ -175,12 +175,6 @@ func lowbit(x int) int {
  */
 ```
 
-**解法2: 线段树**
-
-```go
-
-```
-
 ## 线段树
 
 - 引入
@@ -225,6 +219,122 @@ Query(1, l, r)，从根结点开始递归查询
 // 时间复杂度 O(log(n)), l, r各在树上划分出一条边界，最多形成2logn个候选区间
 
 **区间修改（选修）**
+```
+
+### [区域和检索 - 数组可修改（Medium）](https://leetcode-cn.com/problems/range-sum-query-mutable/)
+
+**解法2: 线段树**
+
+```go
+type NumArray struct {
+    tree SegmentTree
+}
+
+
+func Constructor(nums []int) NumArray {
+    // 构建线段树
+    ST := ConstructorST(nums)
+    return NumArray{
+        tree: ST,
+    }
+}
+
+
+func (this *NumArray) Update(index int, val int)  {
+    this.tree.change(1, index, val)
+}
+
+
+func (this *NumArray) SumRange(left int, right int) int {
+    return this.tree.query(1, left, right)
+}
+
+// ###简易版线段树###
+// 线段树结点，维护区间、区间和
+type Node struct {
+    l, r int
+    sum int
+}
+// 线段树
+type SegmentTree struct {
+    a []Node
+}
+
+// 构建线段树
+func ConstructorST(nums []int) SegmentTree {
+    n := len(nums)
+    a := make([]Node, 4*n)
+    ST := SegmentTree{
+        a : a,
+    }
+    ST.build(1, 0, n - 1, nums)
+    return ST
+}
+
+// 递归建树
+func (ST *SegmentTree) build(curr int, l,r int, nums []int) {
+    ST.a[curr] = Node{
+        l: l,
+        r: r,
+    }
+    // 递归边界
+    if l == r {
+        ST.a[curr].sum = nums[l]
+        return
+    }
+    mid := (l + r) >> 1
+    // 分两半，递归
+    ST.build(curr * 2, l, mid, nums)
+    ST.build(curr * 2 + 1, mid + 1, r, nums)
+    // 回溯时，自底向上统计信息
+    ST.a[curr].sum = ST.a[curr * 2].sum + ST.a[curr * 2 + 1].sum
+}
+
+// 单点修改：先递归找到，然后自底向上统计信息
+func (ST *SegmentTree) change(curr int, index int, val int) {
+    // 递归边界：叶子结点[index,index]
+    if ST.a[curr].l == ST.a[curr].r {
+        ST.a[curr].sum = val
+        return
+    }
+    mid := (ST.a[curr].l + ST.a[curr].r) >> 1
+    if index <= mid {
+        ST.change(curr * 2, index, val)
+    } else {
+        ST.change(curr * 2 + 1, index, val)
+    }
+    ST.a[curr].sum = ST.a[curr * 2].sum + ST.a[curr * 2 + 1].sum
+}
+// 查询[l,r]区间和
+// 完全包含：直接返回
+// 否则：左右划分
+func (ST *SegmentTree) query(curr int, l,r int) int {
+    if l <= ST.a[curr].l && r >= ST.a[curr].r {
+        return ST.a[curr].sum // 当前结点的区间在[l,r]里面，直接返回区间和到上层
+    }
+    mid := (ST.a[curr].l + ST.a[curr].r) >> 1
+    ans := 0
+    if l <= mid { // 累加左子树的区间和
+        ans += ST.query(curr * 2, l, r)
+    }
+    if r > mid { // 累加右子树的区间和
+        ans += ST.query(curr * 2 + 1, l, r)
+    }
+    return ans
+}
+
+/**
+ * Your NumArray object will be instantiated and called as such:
+ * obj := Constructor(nums);
+ * obj.Update(index,val);
+ * param_2 := obj.SumRange(left,right);
+ */
+```
+
+**解法3: 线段树(懒惰标记/延迟标记)**
+
+```go
+// TODO
 ```
 
 ### [一个简单的整数问题 2 （Hard）（AcWing）](https://www.acwing.com/problem/content/description/244/)
