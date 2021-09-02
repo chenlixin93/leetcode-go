@@ -401,12 +401,41 @@ func reverseBits(num uint32) uint32 {
     }
     return ans
 }
+
+// 优化版本 TODO
 ```
 
 ### [比特位计数（Easy）](https://leetcode-cn.com/problems/counting-bits/)
 
 ```go
+//解法1: 暴力解法
+func countBits(n int) []int {
+    var ans []int
+    for i := 0; i <= n; i++ {
+        ans = append(ans, hammingWeight(uint32(i)))
+    }
+    return ans
+}
+// 位 1 的个数（Easy）
+func hammingWeight(num uint32) int {
+    count := 0
+    for num > 0 { // 二进制还有1
+        count++
+        num -= num & (-num) // lowbit(x)，取出最低位1和后面0代表的数据，每次减掉这个1
+    }
+    return count
+}
 
+//解法2: dp解法
+func countBits(n int) []int {
+    ans := make([]int, n+1)
+    ans[0] = 0
+    for i := 1; i <= n; i++ {
+        //ans[i] = ans[i - (i & -i)] + 1 // 减lowbit
+        ans[i] = ans[i & (i - 1)] + 1 // 最低位清0
+    }
+    return ans
+}
 ```
 
 ### [Pow(x, n) （Medium）](https://leetcode-cn.com/problems/powx-n/)
