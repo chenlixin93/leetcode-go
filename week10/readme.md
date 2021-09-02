@@ -354,7 +354,7 @@ func (ST *SegmentTree) query(curr int, l,r int) int {
 ### [位 1 的个数（Easy）](https://leetcode-cn.com/problems/number-of-1-bits/)
 
 ```go
-// 解法1 获取x在二进制下的第n位 (x >> n) & 1
+// 解法1：获取x在二进制下的第n位 (x >> n) & 1
 func hammingWeight(num uint32) int {
     count := 0
     for i := 0; i < 32; i++ {
@@ -366,7 +366,7 @@ func hammingWeight(num uint32) int {
     return count
 }
 
-// 解法2
+// 解法2：
 func hammingWeight(num uint32) int {
     count := 0
     for num > 0 { // 二进制还有1
@@ -380,13 +380,27 @@ func hammingWeight(num uint32) int {
 ### [2 的幂（Easy）](https://leetcode-cn.com/problems/power-of-two/)
 
 ```go
-
+// lowbit
+func isPowerOfTwo(n int) bool {
+    // 00001000
+    //     1000
+    return n > 0 && (n == (n & -n))
+}
 ```
 
 ### [颠倒二进制位（Easy）](https://leetcode-cn.com/problems/reverse-bits/)
 
 ```go
-
+func reverseBits(num uint32) uint32 {
+    var ans uint32
+    var one uint32
+    one = 1
+    for i := 0; i < 32; i++ {
+        // 答案左移，然后加上低位的值（0或1）
+        ans = (ans << one) | ((num >> i) & one)
+    }
+    return ans
+}
 ```
 
 ### [比特位计数（Easy）](https://leetcode-cn.com/problems/counting-bits/)
