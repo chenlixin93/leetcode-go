@@ -354,7 +354,27 @@ func (ST *SegmentTree) query(curr int, l,r int) int {
 ### [位 1 的个数（Easy）](https://leetcode-cn.com/problems/number-of-1-bits/)
 
 ```go
+// 解法1 获取x在二进制下的第n位 (x >> n) & 1
+func hammingWeight(num uint32) int {
+    count := 0
+    for i := 0; i < 32; i++ {
+        if ((num >> i) & 1) == 1 { 
+            // 假设num = 0010，右移1位得到0001，(0001&0001) == 1，证明第1位是1
+            count++
+        }
+    }
+    return count
+}
 
+// 解法2
+func hammingWeight(num uint32) int {
+    count := 0
+    for num > 0 { // 二进制还有1
+        count++
+        num -= num & (-num) // lowbit(x)，取出最低位1和后面0代表的数据，每次减掉这个1
+    }
+    return count
+}
 ```
 
 ### [2 的幂（Easy）](https://leetcode-cn.com/problems/power-of-two/)
