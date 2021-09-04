@@ -441,7 +441,41 @@ func countBits(n int) []int {
 ### [Pow(x, n) （Medium）](https://leetcode-cn.com/problems/powx-n/)
 
 ```go
+// 快速幂解法
+func myPow(x float64, n int) float64 {
+    if n < 0 {
+        return 1 / myPow(x, -n)
+    }
+    if n == 0 {
+        return 1
+    }
+    var ans float64
+    ans = 1
+    for n > 0 {
+        // x的21次幂 = x的（16+4+1）次幂
+        // 10101
+        if (n & 1) == 1 { ans = ans * x }
+        n = n >> 1 // 用过的位置右移去掉
+        x = x * x // 【关键】
+    }
+    return ans
+}
 
+// 分治解法
+func myPow(x float64, n int) float64 {
+	if n > 0 {
+		return quickMul(x, n)
+	}
+	return 1.0 / quickMul(x, -n) // 负负为正
+}
+
+func quickMul(x float64, n int) float64 {
+	if n == 0 { return 1 }
+
+	y := quickMul(x, n/2)
+	if n%2 == 0 { return y * y }
+	return y * y * x // n为奇数，n/2 向下取整，所以这里还得乘回1个x
+}
 ```
 
 ### [N 皇后（Hard）](https://leetcode-cn.com/problems/n-queens/)
