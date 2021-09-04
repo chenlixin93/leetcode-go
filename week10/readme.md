@@ -1,3 +1,11 @@
+- [week10](#week10)
+  * [homework](#homework)
+  * [树状数组](#树状数组)
+  * [线段树](#线段树)
+  * [离散化](#离散化)
+  * [位运算](#位运算)
+  * [离线批处理、关键事件](#离线批处理-关键事件)
+
 # week10
 
 ## homework
@@ -578,7 +586,7 @@ func hammingWeight(num int) int {
 }
 ```
 
-## 随机题目
+## 离线批处理、关键事件
 
 ### [天际线问题（Hard）](https://leetcode-cn.com/problems/the-skyline-problem/)
 
