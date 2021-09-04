@@ -452,8 +452,96 @@ func countBits(n int) []int {
 
 ### [解数独（Hard）](https://leetcode-cn.com/problems/sudoku-solver/)
 
-```go
+**[回溯+剪枝（bool数组版本）](https://github.com/chenlixin93/leetcode-go/tree/main/week09#%E8%A7%A3%E6%95%B0%E7%8B%AChard)**
 
+**回溯+剪枝（位运算版本）**
+
+```go
+func solveSudoku(board [][]byte)  {    
+    // bool数组改为二进制版本
+    row := make([]int, 9)
+    col := make([]int, 9)
+    box := make([]int, 9)
+    initial := int(1022) // 二进制 1111111110（0位浪费）
+    for i := 0; i < 9; i++ {
+        row[i] = initial
+        col[i] = initial
+        box[i] = initial
+    }
+
+	// 预处理数字的可用情况
+	for i := 0; i < 9; i++ {
+		for j := 0; j < 9; j++ {
+			if board[i][j] != '.' { // 初始化时false
+				digit := board[i][j] - byte('0')
+				row[i] ^= (1 << digit) // 异或，相同为0
+				col[j] ^= (1 << digit)
+				box[i/3*3+j/3] ^= (1 << digit)
+			}
+		}
+	}
+	dfs(board, row, col, box)
+    return
+}
+
+func dfs(board [][]byte, row,col,box []int) bool {
+	// 找到第一个可填的数
+	location := getLeastPossibleLocation(board, row, col, box)
+	x := location[0]
+	y := location[1]
+	if x == -1 { return true } // 填满了，有解
+	// 尝试填入1-9
+    boxId := x/3*3+y/3
+    availability := row[x] & col[y] & box[boxId]
+	for digit := 1; digit <= 9; digit++ {
+        if ((availability >> digit) & 1) == 1 {
+            // 初始都是true
+            row[x] ^= (1 << digit) // 取反
+            col[y] ^= (1 << digit) 
+            box[boxId] ^= (1 << digit)
+            board[x][y] = byte('0') + byte(digit)
+            if dfs(board, row, col, box) { 
+                return true 
+            }
+            board[x][y] = '.'
+            row[x] ^= (1 << digit) // 取反
+            col[y] ^= (1 << digit) 
+            box[boxId] ^= (1 << digit)
+        }
+	}
+	return false
+}
+
+// 寻找可填的位置（决策最少的一个）
+func getLeastPossibleLocation(board [][]byte, row,col,box []int) [2]int {
+	ansCnt := 10
+	ans := [2]int{-1, -1}
+	for i := 0; i < 9; i++ {
+		for j := 0; j < 9; j++ {
+			// 如果是小数点
+			if board[i][j] == '.' {
+				// 检查能填的可能性
+                // 要能填入，一定是行、列、盒子都还没填过的，直接统计1的个数
+                boxId := i/3*3+j/3
+                cnt := hammingWeight(row[i] & col[j] & box[boxId])
+				if cnt < ansCnt {
+					ansCnt = cnt
+					ans = [2]int{i, j}
+				}
+			}
+		}
+	}
+	return ans
+}
+
+func hammingWeight(num int) int {
+    count := 0
+    for num > 0 { // 二进制还有1
+        count++
+        num -= num & (-num) // lowbit(x)，取出最低位1和后面0代表的数据，每次减掉这个1
+    }
+    return count
+}
 ```
 
 ## 随机题目
